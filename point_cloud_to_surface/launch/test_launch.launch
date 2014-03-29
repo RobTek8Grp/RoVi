@@ -1,0 +1,12 @@
+<launch>
+
+    <!-- machine name="rx60_asus_cam" address="rx60" user="student" password="student" timeout="10.0" env-loader="/home/student/rovi2/runKinectNode" / -->
+
+    <node name="Visualizer" pkg="point_cloud_to_surface" type="point_cloud_to_surface_node" output="screen">
+    
+        <param name="loop_rate" value="20" />
+        <param name="cloud_topic" value="/camera/depth/points" />
+        
+    </node>
+
+</launch>
