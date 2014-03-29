@@ -28,6 +28,7 @@
 #include <pcl/visualization/pcl_visualizer.h>
 #include <pcl/console/parse.h>
 #include <pcl/visualization/point_cloud_handlers.h>
+#include <pcl/surface/gp3.h>
 
 typedef pcl::PointXYZ PointT;
 
@@ -37,9 +38,10 @@ class PointCloudToSurface
 	ros::NodeHandle nodeHandler;
 	int loopRate;
 
-	//	Boost
+	//	Boost/Visualizer
 	boost::shared_ptr<pcl::visualization::PCLVisualizer> viewer;
 	boost::shared_ptr< pcl::PointCloud<PointT> > cloud;
+	bool firstPointCloud;
 
 	//	System input
 	struct
