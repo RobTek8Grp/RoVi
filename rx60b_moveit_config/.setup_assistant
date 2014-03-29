@@ -1,0 +1,8 @@
+moveit_setup_assistant_config:
+  URDF:
+    package: rx60b_description
+    relative_path: robots/rx60b_description.URDF
+  SRDF:
+    relative_path: config/RX60B-HB_5.srdf
+  CONFIG:
+    generated_timestamp: 1395695673

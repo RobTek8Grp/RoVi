@@ -1,0 +1,31 @@
+/*
+ * RX60wrapper.hpp
+ *
+ *  Created on: Mar 29, 2014
+ *      Author: leon
+ */
+
+#ifndef RX60WRAPPER_HPP_
+#define RX60WRAPPER_HPP_
+
+#include <ros/ros.h>
+#include <sensor_msgs/JointState.h>
+#include "rx60controller/command.h"
+
+class RX60_wrapper
+{
+protected:
+	ros::NodeHandle _local_node_handler, _global_node_handler;
+	ros::ServiceClient _client_handle;
+	sensor_msgs::JointState::Ptr _message;
+
+public:
+	RX60_wrapper();
+	virtual ~RX60_wrapper();
+	
+	void setJointState(sensor_msgs::JointState::Ptr);
+	sensor_msgs::JointState::Ptr getJointState(void);
+	void test(void);
+};
+
+#endif /* RX60WRAPPER_HPP_ */
