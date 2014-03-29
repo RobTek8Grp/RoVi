@@ -1,0 +1,15 @@
+<package>
+  <name>rx60b_description</name>
+  <version>0.0.1</version>
+  <description>
+	Staübli RX60 model provided by SDU-ALLSTARS
+  </description>
+  <maintainer email="dimx@ydimx.dk">Rudi Hansen</maintainer>
+  <license>BSD</license>
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <build_depend>urdf</build_depend>
+
+  <run_depend>urdf</run_depend>
+</package>
+

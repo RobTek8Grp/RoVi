@@ -1,0 +1,6 @@
+<package>
+  <description brief="rx60b_description">rx60b_description</description>
+  <depend package="gazebo" />
+  <author>me</author>
+  <license>BSD</license>
+</package>

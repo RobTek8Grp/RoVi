@@ -15,5 +15,5 @@ catkin_package()
 
 # Add Executable
 add_executable(${PROJECT_NAME} src/main.cpp src/RX60wrapper.cpp)
-target_link_libraries(${PROJECT_NAME} ${catkin_LIBRARIES})
 add_dependencies(${PROJECT_NAME} rx60controller_gencpp)
+target_link_libraries(${PROJECT_NAME} ${catkin_LIBRARIES})

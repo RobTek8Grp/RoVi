@@ -1,0 +1,293 @@
+<robot
+  name="RX60B-HB_5">
+  <link
+    name="base_link">
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://rx60b_description/meshes_rob/base_link.stl" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.867 0.45 0.098 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://rx60b_description/meshes_rob/base_link.stl" />
+      </geometry>
+    </collision>
+  </link>
+  <link
+    name="shoulder">
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://rx60b_description/meshes_rob/shoulder.stl" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.867 0.45 0.098 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://rx60b_description/meshes_rob/shoulder.stl" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="a1"
+    type="revolute">
+    <origin
+      xyz="0 0 0.341"
+      rpy="0 0 0" />
+    <parent
+      link="base_link" />
+    <child
+      link="shoulder" />
+    <axis
+      xyz="0 0 -1" />
+    <limit
+      lower="-3.14159265359"
+      upper="3.14159265359"
+      effort="0"
+      velocity="0.1" />
+  </joint>
+  <link
+    name="arm">
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://rx60b_description/meshes_rob/arm.stl" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.867 0.45 0.098 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://rx60b_description/meshes_rob/arm.stl" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="a2"
+    type="revolute">
+    <origin
+      xyz="0 0.049 0"
+      rpy="-1.57079632679 -1.57079632679 0" />
+    <parent
+      link="shoulder" />
+    <child
+      link="arm" />
+    <axis
+      xyz="0 0 -1" />
+    <limit
+      lower="-2.0943951"
+      upper="2.0943951"
+      effort="0"
+      velocity="0.1" />
+  </joint>
+  <link
+    name="elbow">
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://rx60b_description/meshes_rob/elbow.stl" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.867 0.45 0.098 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://rx60b_description/meshes_rob/elbow.stl" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="a3"
+    type="revolute">
+    <origin
+      xyz="0.29 0 0"
+      rpy="0 0 0" />
+    <parent
+      link="arm" />
+    <child
+      link="elbow" />
+    <axis
+      xyz="0 0 -1" />
+    <limit
+      lower="-3.14159265359"
+      upper="3.14159265359"
+      effort="0"
+      velocity="0.1" />
+  </joint>
+  <link
+    name="forearm">
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 1.57079632679" />
+      <geometry>
+        <mesh
+          filename="package://rx60b_description/meshes_rob/forearm.stl" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.867 0.45 0.098 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 1.57079632679" />
+      <geometry>
+        <mesh
+          filename="package://rx60b_description/meshes_rob/forearm.stl" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="a4"
+    type="revolute">
+    <origin
+      xyz="0.11 0 0"
+      rpy="0 1.57079632679 0" />
+    <parent
+      link="elbow" />
+    <child
+      link="forearm" />
+    <axis
+      xyz="0 0 -1" />
+    <limit
+      lower="-2.3387412"
+      upper="2.3387412"
+      effort="0"
+      velocity="0.1" />
+  </joint>
+  <link
+    name="wrist">
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="1.57079632679 -1.57079632679 0" />
+      <geometry>
+        <mesh
+          filename="package://rx60b_description/meshes_rob/wrist.stl" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="1.57079632679 -1.57079632679 0" />
+      <geometry>
+        <mesh
+          filename="package://rx60b_description/meshes_rob/wrist.stl" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="a5"
+    type="revolute">
+    <origin
+      xyz="0 0 0.2"
+      rpy="3.14159265359 1.57079632679 0" />
+    <parent
+      link="forearm" />
+    <child
+      link="wrist" />
+    <axis
+      xyz="0 0 -1" />
+    <limit
+      lower="-4.71238898"
+      upper="4.71238898"
+      effort="0"
+      velocity="0.1" />
+  </joint>
+  <link
+    name="tool_flange">
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://rx60b_description/meshes/tool_flange.stl" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://rx60b_description/meshes/tool_flange.stl" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="a6"
+    type="revolute">
+    <origin
+      xyz="-0.07 0 0"
+      rpy="0 -1.57079632679 0" />
+    <parent
+      link="wrist" />
+    <child
+      link="tool_flange" />
+    <axis
+      xyz="0 0 -1" />
+    <limit
+      lower="-2.0943951"
+      upper="2.0943951"
+      effort="0"
+      velocity="0.1" />
+  </joint>
+</robot>

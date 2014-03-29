@@ -1,0 +1,17 @@
+<launch>
+<group ns="/bpDrivers">
+  <node name="rx60_controller" pkg="bpDrivers" type="rx60_controller" output="screen">
+    <param name="rx60_controller_ip" value="172.16.1.25" /> <!-- Controller IP: 172.16.1.25 -->
+    <param name="rx60_controller_port" value="22222" />
+    <param name="rx60_command_service_name" value="rx60_command" />
+    <param name="rx60_max_velocity" value="100.0" />
+    <param name="rx60_max_acceleration" value="100.0" />
+    <param name="rx60_max_deceleration" value="100.0" />
+    <param name="rx60_max_rotational_velocity" value="100000000.0" />
+    <param name="rx60_max_cartesian_velocity" value="100000.0" />
+    <param name="rx60_blend" value="true" />
+    <param name="rx60_reach" value="3.0" />
+    <param name="rx60_leave" value="3.0" />
+  </node>
+</group>
+</launch>

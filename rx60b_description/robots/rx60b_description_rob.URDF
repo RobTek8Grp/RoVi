@@ -1,0 +1,391 @@
+<robot
+  name="RX60B-HB_5">
+  <link
+    name="base_link">
+    <inertial>
+      <origin
+        xyz="0.0 0.0 0.341"
+        rpy="0 0 0" />
+      <mass
+        value="5.9088" />
+      <inertia
+        ixx="0.03296"
+        ixy="0.0030847"
+        ixz="0.0025234"
+        iyy="0.052353"
+        iyz="0.00040062"
+        izz="0.044104" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://rx60b_description/meshes/staubli0.stl" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.79216 0.81961 0.93333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://rx60b_description/meshes/staubli0.stl" />
+      </geometry>
+    </collision>
+  </link>
+  <link
+    name="shoulder">
+    <inertial>
+      <origin
+        xyz="0.0 0.0 0.049"
+        rpy="0 -1.57079632679 -1.57079632679" />
+      <mass
+        value="9.5013" />
+      <inertia
+        ixx="0.073083"
+        ixy="0.0014723"
+        ixz="-0.00012426"
+        iyy="0.066123"
+        iyz="0.00035551"
+        izz="0.065589" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://rx60b_description/meshes/staubli1.stl" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.79216 0.81961 0.93333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://rx60b_description/meshes/staubli1.stl" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="a1"
+    type="revolute">
+    <origin
+      xyz="0.23001 0.15429 0"
+      rpy="-1.0626E-14 5.6214E-16 -3.0845" />
+    <parent
+      link="base_link" />
+    <child
+      link="shoulder" />
+    <axis
+      xyz="0 0 -1" />
+    <limit
+      lower="-3"
+      upper="3"
+      effort="0"
+      velocity="1" />
+  </joint>
+  <link
+    name="arm">
+    <inertial>
+      <origin
+        xyz="5.09561360495514E-06 -0.138196109283885 0.0727835682857448"
+        rpy="0 0 0" />
+      <mass
+        value="6.66134403436103" />
+      <inertia
+        ixx="0.112308267271819"
+        ixy="-2.73734160437738E-06"
+        ixz="-1.15550456006135E-06"
+        iyy="0.0190536219451268"
+        iyz="0.0017369325750092"
+        izz="0.121590225497977" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://rx60b_description/meshes/staubli2.stl" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://rx60b_description/meshes/staubli2.stl" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="a2"
+    type="revolute">
+    <origin
+      xyz="0 0.070336 0.016437"
+      rpy="-1.5708 0.074221 -2.8389E-15" />
+    <parent
+      link="shoulder" />
+    <child
+      link="arm" />
+    <axis
+      xyz="0 0 -1" />
+    <limit
+      lower="-3"
+      upper="3"
+      effort="0"
+      velocity="1" />
+  </joint>
+  <link
+    name="elbow">
+    <inertial>
+      <origin
+        xyz="-0.00358959488339952 0.011742854715135 -0.0487496412667112"
+        rpy="0 0 0" />
+      <mass
+        value="3.98888567041493" />
+      <inertia
+        ixx="0.0205200699386537"
+        ixy="0.000592974161310205"
+        ixz="0.000377564056723"
+        iyy="0.0117855859259791"
+        iyz="0.000110785281844027"
+        izz="0.0227045828440842" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://rx60b_description/meshes/staubli3.stl" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://rx60b_description/meshes/staubli3.stl" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="a3"
+    type="revolute">
+    <origin
+      xyz="0 -0.29 0"
+      rpy="1.3921E-16 -2.0886E-15 -0.10856" />
+    <parent
+      link="arm" />
+    <child
+      link="elbow" />
+    <axis
+      xyz="0 0 -1" />
+    <limit
+      lower="-3"
+      upper="3"
+      effort="0"
+      velocity="1" />
+  </joint>
+  <link
+    name="forearm">
+    <inertial>
+      <origin
+        xyz="-0.00362144594215283 -2.9698928546984E-07 0.09198652379704"
+        rpy="0 0 0" />
+      <mass
+        value="1.77031626695819" />
+      <inertia
+        ixx="0.00716597091084717"
+        ixy="-5.17448849713482E-08"
+        ixz="-0.000290977080636069"
+        iyy="0.00679986797473403"
+        iyz="3.1802177170113E-08"
+        izz="0.00287950382626037" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://rx60b_description/meshes/staubli4.stl" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://rx60b_description/meshes/staubli4.stl" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="a4"
+    type="revolute">
+    <origin
+      xyz="0 -0.10574 -0.040836"
+      rpy="-1.5708 -0.11533 3.1416" />
+    <parent
+      link="elbow" />
+    <child
+      link="forearm" />
+    <axis
+      xyz="0 0 -1" />
+    <limit
+      lower="-3"
+      upper="3"
+      effort="0"
+      velocity="1" />
+  </joint>
+  <link
+    name="wrist">
+    <inertial>
+      <origin
+        xyz="0.0149889993161522 1.64276681174913E-07 -0.000500004042091634"
+        rpy="0 0 0" />
+      <mass
+        value="0.137404827201104" />
+      <inertia
+        ixx="4.48923214834327E-05"
+        ixy="6.92841234616249E-10"
+        ixz="-2.69590690810833E-11"
+        iyy="8.24613181959874E-05"
+        iyz="-4.67820193615198E-10"
+        izz="7.87260550277366E-05" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://rx60b_description/meshes/staubli5.stl" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://rx60b_description/meshes/staubli5.stl" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="a5"
+    type="revolute">
+    <origin
+      xyz="0 0 0.20326"
+      rpy="-1.5708 -1.4997 3.1416" />
+    <parent
+      link="forearm" />
+    <child
+      link="wrist" />
+    <axis
+      xyz="0 0 -1" />
+    <limit
+      lower="-3"
+      upper="3"
+      effort="0"
+      velocity="1" />
+  </joint>
+  <link
+    name="tool_flange">
+    <inertial>
+      <origin
+        xyz="-0.000173643923643052 -4.85722573273506E-16 0.00423446250465342"
+        rpy="0 0 0" />
+      <mass
+        value="0.0124666250476077" />
+      <inertia
+        ixx="1.50471210552417E-06"
+        ixy="-3.17637355220363E-22"
+        ixz="-3.54123317955345E-09"
+        iyy="1.47024133861622E-06"
+        iyz="5.18476807948238E-21"
+        izz="2.7793500021798E-06" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://rx60b_description/meshes/staubli6.stl" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://rx60b_description/meshes/staubli6.stl" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="a6"
+    type="revolute">
+    <origin
+      xyz="0.05463 0 -0.0005"
+      rpy="1.5708 -0.48677 1.5708" />
+    <parent
+      link="wrist" />
+    <child
+      link="tool_flange" />
+    <axis
+      xyz="0 0 -1" />
+    <limit
+      lower="-3"
+      upper="3"
+      effort="0"
+      velocity="1" />
+  </joint>
+</robot>
