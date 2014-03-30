@@ -1,0 +1,12 @@
+# 	Ignore top-level symbolic link to CMakeLists.txt
+/CMakeLists.txt
+
+# 	All files ending with a tilde
+*~
+
+# 	Ignore Python .pyc
+*.pyc
+
+#	Ignore ROS
+CATKIN_IGNORE
+.bag
