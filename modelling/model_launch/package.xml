@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<package>
+  <name>model_launch</name>
+  <version>0.0.0</version>
+  <description>The model_launch package</description>
+  <maintainer email="kent.stark.olsen@gmail.com">Kent Stark Olsen</maintainer>
+  <license>TODO</license>
+
+  <export>
+  </export>
+</package>
