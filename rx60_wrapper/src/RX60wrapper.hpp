@@ -10,7 +10,7 @@
 
 #include <ros/ros.h>
 #include <sensor_msgs/JointState.h>
-#include "rx60controller/command.h"
+#include "rx60_wrapper/command.h"
 
 class RX60_wrapper
 {

@@ -1,5 +1,5 @@
 #include <ros/ros.h>
-#include "rx60controller/command.h"
+#include "rx60_wrapper/command.h"
 #include "RX60wrapper.hpp"
 
 void printState(sensor_msgs::JointState::Ptr state)
