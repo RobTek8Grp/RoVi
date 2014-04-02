@@ -1,5 +1,5 @@
 #include <ros/ros.h>
-#include <time.h>
+//#include <time.h>
 #include <hardware_interface/joint_command_interface.h>
 #include <hardware_interface/joint_state_interface.h>
 #include <hardware_interface/robot_hw.h>
@@ -86,6 +86,8 @@ int main( int argc, char** argv )
 {
     ros::init(argc, argv, "rx60_hardware");
 
+
+    /*
     RX60Robot robot;
     controller_manager::ControllerManager cm(&robot);
 
@@ -113,4 +115,5 @@ int main( int argc, char** argv )
 
         ros::Duration(5).sleep();
     }
+    */
 }
