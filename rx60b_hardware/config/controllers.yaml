@@ -1,0 +1,11 @@
+controller_list:
+  - name: rx60b_controller
+    type: joint_state_controller/JointStateController
+    publish_rate: 50
+    joints:
+      - a1
+      - a2
+      - a3
+      - a4
+      - a5
+      - a6
