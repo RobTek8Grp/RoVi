@@ -47,22 +47,22 @@ sensor_msgs::JointState::Ptr RX60_wrapper::getJointState(void)
 {
 	// get current joint states
 	rx60_wrapper::command service_object;
-	_message = sensor_msgs::JointState::Ptr(new sensor_msgs::JointState());
+	message = sensor_msgs::JointState::Ptr(new sensor_msgs::JointState());
 	
   	service_object.request.command_number = rx60_wrapper::command::Request::GET_JOINT_CONFIGURATION;
 	
 	if (_client_handle.call(service_object))
 	{
-		_message->position.push_back(service_object.response.joint1);
-		_message->position.push_back(service_object.response.joint2);
-		_message->position.push_back(service_object.response.joint3);
-		_message->position.push_back(service_object.response.joint4);
-		_message->position.push_back(service_object.response.joint5);
-		_message->position.push_back(service_object.response.joint6); 
+		message->position.push_back(service_object.response.joint1);
+		message->position.push_back(service_object.response.joint2);
+		message->position.push_back(service_object.response.joint3);
+		message->position.push_back(service_object.response.joint4);
+		message->position.push_back(service_object.response.joint5);
+		message->position.push_back(service_object.response.joint6); 
 
-		for(int i = 0 ; i < _message->position.size() ; i++)
+		for(int i = 0 ; i < message->position.size() ; i++)
 		{
-			ROS_INFO("%s: Joint %d: %f",ros::this_node::getName().c_str(), i+1, _message->position[i]);
+			ROS_INFO("%s: Joint %d: %f",ros::this_node::getName().c_str(), i+1, message->position[i]);
 		}
 	}
 	else
@@ -70,7 +70,7 @@ sensor_msgs::JointState::Ptr RX60_wrapper::getJointState(void)
 		ROS_ERROR("%s: Failed in getJointState method",ros::this_node::getName().c_str());
 	}
 
-
+	return message;
 }
 
 void RX60_wrapper::test(void)
