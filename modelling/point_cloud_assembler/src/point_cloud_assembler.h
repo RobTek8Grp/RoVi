@@ -16,6 +16,8 @@
 #include <pcl/point_types.h>
 #include <pcl/point_cloud.h>
 
+//#include "point_cloud_cutoff.h"
+
 typedef pcl::PointXYZ PointT;
 
 class PointCloudAssembler
@@ -34,20 +36,20 @@ class PointCloudAssembler
 	} input;
 
 	//	Output
-	struct
+/*	struct
 	{
 		pcl::PointCloud<PointT> points;
 		ros::Publisher publisher;
 		std::string topic;
 		int bufferSize;
 	} output;
-
+*/
 	//	Callbacks
 	void pointCloudCallback(const sensor_msgs::PointCloud2::ConstPtr& data);
 
 public:
 	PointCloudAssembler();
-	~PointCloudAssembler();
+	virtual ~PointCloudAssembler();
 
 	void makeMeSpin(void);
 };

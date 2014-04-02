@@ -25,7 +25,7 @@ PointCloudToSurface::PointCloudToSurface() : 	viewer(new pcl::visualization::PCL
 	this->nodeHandler.param<int>("loop_rate", this->loopRate, 20);
 
 	//	Setup system input
-	this->nodeHandler.param<std::string>("cloud_topic", this->input.cloudTopic, "/camera/depth_registered/points");
+	this->nodeHandler.param<std::string>("cloud_topic", this->input.cloudTopic, "/camera/depth/points");
 	this->input.subscriber = this->nodeHandler.subscribe<sensor_msgs::PointCloud2>(this->input.cloudTopic, 10, &PointCloudToSurface::pointCloudCallback, this);
 
 	//	Visualizer

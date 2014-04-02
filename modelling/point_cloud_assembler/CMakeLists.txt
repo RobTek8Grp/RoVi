@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 2.8.3)
 project(point_cloud_assembler)
 
+catkin_package()
+
 #########################
 #	Packages	#
 #########################
@@ -25,7 +27,7 @@ add_definitions(${PCL_DEFINITIONS})
 #################################
 #	 Catkin specific	#
 #################################
-catkin_package()
+#catkin_package()
 
 #################
 #     Build 	#
