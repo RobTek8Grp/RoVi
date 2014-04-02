@@ -47,7 +47,7 @@ sensor_msgs::JointState::Ptr RX60_wrapper::getJointState(void)
 {
 	// get current joint states
 	rx60_wrapper::command service_object;
-	message = sensor_msgs::JointState::Ptr(new sensor_msgs::JointState());
+	auto message = sensor_msgs::JointState::Ptr(new sensor_msgs::JointState());
 	
   	service_object.request.command_number = rx60_wrapper::command::Request::GET_JOINT_CONFIGURATION;
 	
@@ -119,7 +119,7 @@ void RX60_wrapper::test(void)
 
 		// Read and print new joint states
 		rx60_wrapper::command service_object3;
-		_message = sensor_msgs::JointState::Ptr(new sensor_msgs::JointState());
+		//auto message = sensor_msgs::JointState::Ptr(new sensor_msgs::JointState());
 	
 	  	service_object3.request.command_number = rx60_wrapper::command::Request::GET_JOINT_CONFIGURATION;
 	

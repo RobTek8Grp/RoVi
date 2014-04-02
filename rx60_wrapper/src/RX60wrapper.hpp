@@ -17,7 +17,7 @@ class RX60_wrapper
 protected:
 	ros::NodeHandle _local_node_handler, _global_node_handler;
 	ros::ServiceClient _client_handle;
-	sensor_msgs::JointState::Ptr _message;
+//	sensor_msgs::JointState::Ptr _message;
 
 public:
 	RX60_wrapper();
