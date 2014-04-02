@@ -12,6 +12,7 @@ RX60_wrapper::RX60_wrapper()
 {
 
   _client_handle = _global_node_handler.serviceClient<rx60_wrapper::command>("rx60_controller/rx60_command");
+	this->statePublisher = this->_global_node_handler.advertise<sensor_msgs::JointState>("/robot_rx60b/controller_joint_states", 10);
 
 }
 
@@ -48,9 +49,9 @@ sensor_msgs::JointState::Ptr RX60_wrapper::getJointState(void)
 	// get current joint states
 	rx60_wrapper::command service_object;
 	auto message = sensor_msgs::JointState::Ptr(new sensor_msgs::JointState());
-	
+
   	service_object.request.command_number = rx60_wrapper::command::Request::GET_JOINT_CONFIGURATION;
-	
+
 	if (_client_handle.call(service_object))
 	{
 		message->position.push_back(service_object.response.joint1);
@@ -120,9 +121,9 @@ void RX60_wrapper::test(void)
 		// Read and print new joint states
 		rx60_wrapper::command service_object3;
 		//auto message = sensor_msgs::JointState::Ptr(new sensor_msgs::JointState());
-	
+
 	  	service_object3.request.command_number = rx60_wrapper::command::Request::GET_JOINT_CONFIGURATION;
-	
+
 		if (_client_handle.call(service_object3))
 		{
 			ROS_INFO("%s: Joint state: [%f,%f,%f,%f,%f,%f]",ros::this_node::getName().c_str(), 
@@ -136,8 +137,32 @@ void RX60_wrapper::test(void)
 		else
 		{
 			ROS_ERROR("%s: Failed in test method",ros::this_node::getName().c_str());
-		}	
+		}
 	}
 }
 
+void RX60_wrapper::publishRobotState (void)
+{
+	auto msg = sensor_msgs::JointState::Ptr(new sensor_msgs::JointState());
+	rx60_wrapper::command service;
+	service.request.command_number = rx60_wrapper::command::Request::GET_JOINT_CONFIGURATION;
 
+	double deg_to_rad = M_PI / 180.0;
+
+	if (_client_handle.call(service))
+	{
+		msg->position.push_back(service.response.joint1 * deg_to_rad);
+		msg->position.push_back(service.response.joint2 * deg_to_rad);
+		msg->position.push_back(service.response.joint3 * deg_to_rad);
+		msg->position.push_back(service.response.joint4 * deg_to_rad);
+		msg->position.push_back(service.response.joint5 * deg_to_rad);
+		msg->position.push_back(service.response.joint6 * deg_to_rad);
+	}
+	else
+	{
+		ROS_ERROR("%s: Failed in publishing joint states ...",ros::this_node::getName().c_str());
+	}
+
+	msg->header.stamp = ros::Time::now();
+	statePublisher.publish(*msg);
+}

@@ -17,10 +17,13 @@ int main(int argc, char **argv)
 
 	RX60_wrapper rx60;
 
+	ros::Rate r(20);
+
 	while(ros::ok())
 	{
-		rx60.test();
-		ros::Duration(1.0).sleep();
+		//rx60.test();
+		rx60.publishRobotState();
+		r.sleep();
 	}
 
 	return 0;
