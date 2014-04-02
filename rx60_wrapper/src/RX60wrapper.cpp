@@ -147,7 +147,15 @@ void RX60_wrapper::publishRobotState (void)
 	rx60_wrapper::command service;
 	service.request.command_number = rx60_wrapper::command::Request::GET_JOINT_CONFIGURATION;
 
-	double deg_to_rad = M_PI / 180.0;
+	double deg_to_rad = -M_PI / 180.0;
+
+	msg->name.push_back("a1");
+	msg->name.push_back("a2");
+	msg->name.push_back("a3");
+	msg->name.push_back("a4");
+	msg->name.push_back("a5");
+	msg->name.push_back("a6");
+
 
 	if (_client_handle.call(service))
 	{
