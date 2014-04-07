@@ -1,0 +1,12 @@
+controller_list:
+  - name: robot_rx60b/rx60b_controller
+    action_ns: follow_joint_trajectory
+    default: true
+    type: FollowJointTrajectory
+    joints:
+      - a1
+      - a2
+      - a3
+      - a4
+      - a5
+      - a6

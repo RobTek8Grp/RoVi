@@ -1,0 +1,26 @@
+<launch>
+  <node pkg="rx60b_hardware" type="rx60b_hardware" name="rx60b_hardware_interface" output="screen" />
+
+  <include file="$(find rx60b_moveit_config2)/launch/planning_context.launch">
+    <arg name="load_robot_description" value="true"/>
+  </include>
+  
+  <rosparam ns="robot_rx60b">
+    rx60b_controller:
+      #type: joint_state_controller/JointStateController
+      type: position_controllers/JointTrajectoryController
+      #joint_mode: 1 #position
+      publish_rate: 50
+      joints:
+        - a1
+        - a2
+        - a3
+        - a4
+        - a5
+        - a6
+
+   </rosparam>
+   
+   <node ns="robot_rx60b" name="joint_state_controller" pkg="controller_manager" type="spawner" output="screen" args="rx60b_controller" />
+
+</launch>

@@ -1,7 +1,10 @@
 controller_list:
   - name: rx60b_controller
-    type: joint_state_controller/JointStateController
+    #type: joint_state_controller/JointStateController
     publish_rate: 50
+    ns: follow_joint_trajectory
+    action_ns: follow_joint_traject
+    default: true
     joints:
       - a1
       - a2
