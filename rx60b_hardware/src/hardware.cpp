@@ -4,15 +4,15 @@
 #include <hardware_interface/joint_command_interface.h>
 #include <joint_trajectory_controller/hardware_interface_adapter.h>
 #include <controller_manager/controller_manager.h>
+#include "RX60wrapper.hpp"
 
-// Test
-#include <sensor_msgs/JointState.h>
-
-class RX60Robot : public hardware_interface::RobotHW
+class RX60Robot : public hardware_interface::RobotHW //, public RX60_wrapper
 {
 public:
     RX60Robot()
     {
+        //RX60_wrapper();
+
         for (int j = 0; j <= 6; j++)
         {
             pos[j] = 0;
@@ -53,22 +53,19 @@ public:
         this->registerInterface(&jnt_pos_interface);
 
     }
-    void read()
+    void read(const sensor_msgs::JointState::Ptr robotState)
     {
-        //std::cout << "Reading from robot .." << std::endl;
-        /*
+
+//        sensor_msgs::JointState::Ptr robotState = getJointState();
+
         for (int j = 0; j <= 6; j++)
         {
-            pos[j] = -1;
+            pos[j] = robotState->position[j] * deg_to_rad;
             vel[j] = 0;
             eff[j] = 0;
         }
-        pos[1] = 100;
-        pos[2] = 3;
-        cmd[0] = 1;
-        */
     }
-    void write()
+    sensor_msgs::JointState::Ptr write()
     {
         //std::cout << "Joint 1: cmd: " << cmd[0] << " pos: " << pos[0] << " vel: " << vel[0] << " eff: " << eff[0] << std::endl;
         //std::cout << "Joint 2: cmd: " << cmd[1] << " pos: " << pos[1] << " vel: " << vel[1] << " eff: " << eff[1] << std::endl;
@@ -76,6 +73,26 @@ public:
         std::cout << "Joint 4: " << cmd[3] << std::endl;
         std::cout << "Joint 5: " << cmd[4] << std::endl;
         std::cout << "Joint 6: " << cmd[5] << std::endl;*/
+
+        auto msg = sensor_msgs::JointState::Ptr(new sensor_msgs::JointState());
+
+        msg->name.push_back("a1");
+        msg->name.push_back("a2");
+        msg->name.push_back("a3");
+        msg->name.push_back("a4");
+        msg->name.push_back("a5");
+        msg->name.push_back("a6");
+
+        msg->position.push_back(cmd[0] * rad_to_deg);
+        msg->position.push_back(cmd[1] * rad_to_deg);
+        msg->position.push_back(cmd[2] * rad_to_deg);
+        msg->position.push_back(cmd[3] * rad_to_deg);
+        msg->position.push_back(cmd[4] * rad_to_deg);
+        msg->position.push_back(cmd[5] * rad_to_deg);
+
+        msg->header.stamp = ros::Time::now();
+
+        return msg;
     }
     void info()
     {
@@ -83,7 +100,9 @@ public:
             ROS_INFO("Joint %i: cmd: %f pos: %f vel: %f eff: %f" , i, cmd[i], pos[i], vel[i], eff[i]);
     }
 
-//private:
+private:
+    const double deg_to_rad = -M_PI / 180.0;
+    const double rad_to_deg = -180.0 / M_PI ;
     hardware_interface::JointStateInterface jnt_state_interface;
     hardware_interface::PositionJointInterface jnt_pos_interface;
     double cmd[6];
@@ -92,47 +111,52 @@ public:
     double eff[6];
 };
 
-RX60Robot robot;
-
-void chatterCallback(const sensor_msgs::JointState::ConstPtr& msg)
-{
-    for (int i = 0; i < 6; i++)
-        robot.pos[i] = msg->position[i];
-}
-
 int main( int argc, char** argv )
 {
+
     ros::init(argc, argv, "rx60_hardware");
     ros::NodeHandle nh_("robot_rx60b");
+    RX60Robot robot;
+    RX60_wrapper wrapper;
     controller_manager::ControllerManager cm(&robot, nh_);
 
-
-    ros::AsyncSpinner spinner(1);
+    ros::AsyncSpinner spinner(0);
     spinner.start();
+    //ros::MultiThreadedSpinner spinner(4);
+    //spinner.spin();
+    ROS_INFO("Spinner started!!!");
 
     ros::Time last = ros::Time::now();
-    ros::Rate r(100);
+    ros::Rate r(1);
     int alive_count = 0;
 
-    ros::Subscriber sub = nh_.subscribe("/joint_states", 1000, chatterCallback);
 
     while (ros::ok())
     {
         ros::Duration period = ros::Time::now() - last;
 
-        robot.read();
+        ROS_INFO("GetJointState");
+        const sensor_msgs::JointState::Ptr robotState = wrapper.getJointState();
+        robot.read(robotState);
+
+        ROS_INFO("Update controller");
         cm.update(ros::Time::now(), period);
-        robot.write();
+
+        ROS_INFO("Get controller update");
+        const sensor_msgs::JointState::Ptr robotCmd = robot.write();
+        wrapper.setJointState(robotCmd);
 
         last = ros::Time::now();
 
-        //ros::spinOnce();
-        if (alive_count++ > 100)
+        if (alive_count++ > 2)
         {
             alive_count = 0;
             ROS_INFO("alive @ %6.4f ", ros::Time::now().toSec());
+            wrapper.publishRobotState();
+
             robot.info();
         }
+        //ros::spinOnce();
         r.sleep();
     }
 }

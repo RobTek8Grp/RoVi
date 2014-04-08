@@ -1,31 +1,31 @@
 joint_limits:
   a4:
     has_velocity_limits: true
-    max_velocity: 0.001
+    max_velocity: 0.05
     has_acceleration_limits: false
     max_acceleration: 0
   a3:
     has_velocity_limits: true
-    max_velocity: 0.001
+    max_velocity: 0.05
     has_acceleration_limits: false
     max_acceleration: 0
   a6:
     has_velocity_limits: true
-    max_velocity: 0.001
+    max_velocity: 0.05
     has_acceleration_limits: false
     max_acceleration: 0
   a2:
     has_velocity_limits: true
-    max_velocity: 0.001
+    max_velocity: 0.05
     has_acceleration_limits: false
     max_acceleration: 0
   a5:
     has_velocity_limits: true
-    max_velocity: 0.001
+    max_velocity: 0.05
     has_acceleration_limits: false
     max_acceleration: 0
   a1:
     has_velocity_limits: true
-    max_velocity: 0.001
+    max_velocity: 0.05
     has_acceleration_limits: false
     max_acceleration: 0

@@ -1,10 +1,14 @@
 cmake_minimum_required(VERSION 2.8.3)
 project(rx60b_hardware)
 
+ADD_DEFINITIONS(-std=c++0x)
+
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
+find_package(catkin REQUIRED COMPONENTS roscpp std_msgs actionlib actionlib_msgs)
 find_package(catkin REQUIRED COMPONENTS hardware_interface controller_manager)
+find_package(rx60_wrapper)
 
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)
@@ -76,7 +80,7 @@ find_package(catkin REQUIRED COMPONENTS hardware_interface controller_manager)
 ## CATKIN_DEPENDS: catkin_packages dependent projects also need
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
-DEPENDS hardware_interface controller_manager
+DEPENDS hardware_interface controller_manager rx60_wrapper
 #  INCLUDE_DIRS include
 #  LIBRARIES rx60b_hardware
 #  CATKIN_DEPENDS other_catkin_pkg
@@ -89,7 +93,7 @@ DEPENDS hardware_interface controller_manager
 
 ## Specify additional locations of header files
 ## Your package locations should be listed before other locations
-# include_directories(include)
+#include_directories(rx60_wrapper_INCLUDE_DIRS)
 
 ## Declare a cpp library
 # add_library(rx60b_hardware
@@ -98,7 +102,7 @@ DEPENDS hardware_interface controller_manager
 
 ## Declare a cpp executable
 # add_executable(rx60b_hardware_node src/rx60b_hardware_node.cpp)
-add_executable(rx60b_hardware src/hardware.cpp)
+add_executable(rx60b_hardware src/hardware.cpp src/RX60wrapper.cpp)
 
 ## Add cmake target dependencies of the executable/library
 ## as an example, message headers may need to be generated before nodes
