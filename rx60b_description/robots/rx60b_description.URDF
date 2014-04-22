@@ -207,7 +207,7 @@
     <visual>
       <origin
         xyz="0 0 0"
-        rpy="1.57079632679 -1.57079632679 0" />
+        rpy="0 0 1.57079632679" />
       <geometry>
         <mesh
           filename="package://rx60b_description/meshes_rob/wrist.stl" />
@@ -221,7 +221,7 @@
     <collision>
       <origin
         xyz="0 0 0"
-        rpy="1.57079632679 -1.57079632679 0" />
+        rpy="0 0 1.57079632679" />
       <geometry>
         <mesh
           filename="package://rx60b_description/meshes_rob/wrist.stl" />
@@ -233,7 +233,7 @@
     type="revolute">
     <origin
       xyz="0 0 0.2"
-      rpy="3.14159265359 1.57079632679 0" />
+      rpy="0 1.57079632679 0" />
     <parent
       link="forearm" />
     <child
@@ -289,5 +289,73 @@
       upper="2.0943951"
       effort="0"
       velocity="0.1" />
+  </joint>
+  
+  
+  <link
+    name="cameratool">
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://rx60b_description/meshes/tool_visual.stl" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.0 0.7 0.5 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://rx60b_description/meshes/tool_boundingbox.stl" />
+      </geometry>
+    </collision>
+  </link>
+  
+  <joint
+    name="toolmount"
+    type="fixed">
+    <origin
+      xyz="0 0 0.0095"
+      rpy="0 0 0" />
+    <parent
+      link="tool_flange" />
+    <child
+      link="cameratool" />
+    <axis
+      xyz="1 0 0" />
+  </joint>
+  
+  
+  <link name="bumblebee_cam1"></link>
+  <link name="bumblebee_cam2"></link>
+  
+  <joint
+    name="bumblebee_cam1_joint"
+    type="fixed">
+    <origin
+      xyz="0.06 -0.016 0.106114"
+      rpy="0 0 0" />
+    <parent link="cameratool" />
+    <child link="bumblebee_cam1" />
+    <axis xyz="1 0 0" />
+  </joint>
+  
+    <joint
+    name="bumblebee_cam2_joint"
+    type="fixed">
+    <origin
+      xyz="-0.06 -0.016 0.106114"
+      rpy="0 0 0" />
+    <parent link="cameratool" />
+    <child link="bumblebee_cam2" />
+    <axis xyz="1 0 0" />
   </joint>
 </robot>
