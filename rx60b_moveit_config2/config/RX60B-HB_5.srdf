@@ -28,11 +28,18 @@
     </group_state>
     <!--END EFFECTOR: Purpose: Represent information about an end effector.-->
     <end_effector name="tool_flange" parent_link="tool_flange" group="robot" />
+    <end_effector name="bumblebee_cam1" parent_link="bumblebee_cam1" group="robot" />
+    <end_effector name="bumblebee_cam2" parent_link="bumblebee_cam2" group="robot" />
     <!--DISABLE COLLISIONS: By default it is assumed that any link of the robot could potentially come into collision with any other link in the robot. This tag disables collision checking between a specified pair of links. -->
+    <disable_collisions link1="arm" link2="base_link" reason="Never" />
     <disable_collisions link1="arm" link2="elbow" reason="Adjacent" />
     <disable_collisions link1="arm" link2="shoulder" reason="Adjacent" />
+    <disable_collisions link1="base_link" link2="elbow" reason="Never" />
     <disable_collisions link1="base_link" link2="shoulder" reason="Adjacent" />
+    <disable_collisions link1="cameratool" link2="tool_flange" reason="Adjacent" />
+    <disable_collisions link1="cameratool" link2="wrist" reason="Never" />
     <disable_collisions link1="elbow" link2="forearm" reason="Adjacent" />
+    <disable_collisions link1="elbow" link2="shoulder" reason="Never" />
     <disable_collisions link1="elbow" link2="tool_flange" reason="Never" />
     <disable_collisions link1="elbow" link2="wrist" reason="Never" />
     <disable_collisions link1="forearm" link2="wrist" reason="Adjacent" />

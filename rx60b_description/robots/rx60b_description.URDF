@@ -305,7 +305,7 @@
       <material
         name="">
         <color
-          rgba="0.0 0.7 0.5 1" />
+          rgba="0.3 0.6 0.6 1" />
       </material>
     </visual>
     <collision>
@@ -324,7 +324,7 @@
     type="fixed">
     <origin
       xyz="0 0 0.0095"
-      rpy="0 0 0" />
+      rpy="0 0 -0.785398163" />
     <parent
       link="tool_flange" />
     <child
@@ -336,26 +336,73 @@
   
   <link name="bumblebee_cam1"></link>
   <link name="bumblebee_cam2"></link>
-  
   <joint
     name="bumblebee_cam1_joint"
     type="fixed">
     <origin
-      xyz="0.06 -0.016 0.106114"
-      rpy="0 0 0" />
+      xyz="-0.06 0.0 0.106114"
+      rpy="-1.57079632679 0 0" />
     <parent link="cameratool" />
     <child link="bumblebee_cam1" />
     <axis xyz="1 0 0" />
   </joint>
   
-    <joint
+  <joint
     name="bumblebee_cam2_joint"
     type="fixed">
     <origin
-      xyz="-0.06 -0.016 0.106114"
-      rpy="0 0 0" />
+      xyz="0.06 0.0 0.106114"
+      rpy="-1.57079632679 0 0" />
     <parent link="cameratool" />
     <child link="bumblebee_cam2" />
     <axis xyz="1 0 0" />
   </joint>
+  
+  
+  <link name="asus_depthcam"></link>
+  <link name="asus_rgbcam"></link>
+  <link name="asus_projector"></link>
+  <link name="camera_link"></link>
+  
+  <joint
+    name="asus_depthcam_joint"
+    type="fixed">
+    <origin
+      xyz="-0.046 0.052 0.056"
+      rpy="1.57079632679 0 3.14159265359" />
+    <parent link="cameratool" />
+    <child link="asus_depthcam" />
+    <axis xyz="1 0 0" />
+  </joint>
+  <joint
+    name="asus_rgbcam_joint"
+    type="fixed">
+    <origin
+      xyz="-0.0196 0.052 0.056"
+      rpy="1.57079632679 0 3.14159265359" />
+    <parent link="cameratool" />
+    <child link="asus_rgbcam" />
+    <axis xyz="1 0 0" />
+  </joint>
+  <joint
+    name="asus_projector_joint"
+    type="fixed">
+    <origin
+      xyz="0.0274 0.052 0.056"
+      rpy="1.57079632679 0 3.14159265359" />
+    <parent link="cameratool" />
+    <child link="asus_projector" />
+    <axis xyz="1 0 0" />
+  </joint>
+  <joint
+    name="camera_link_joint"
+    type="fixed">
+    <origin
+      xyz="0.0 0.052 0.056"
+      rpy="0 0 0" />
+    <parent link="cameratool" />
+    <child link="camera_link" />
+    <axis xyz="1 0 0" />
+  </joint>
+
 </robot>

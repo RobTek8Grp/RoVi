@@ -5,4 +5,4 @@ moveit_setup_assistant_config:
   SRDF:
     relative_path: config/RX60B-HB_5.srdf
   CONFIG:
-    generated_timestamp: 1396043307
+    generated_timestamp: 1398155105
