@@ -39,7 +39,7 @@ void processFeedback(
 
 int main(int argc, char **argv)
 {
-    const double radius = 0.3;
+    const double radius = 0.5;
 
     ros::init (argc, argv, "simple_pose_mission");
     ros::AsyncSpinner spinner(1);
@@ -68,6 +68,7 @@ int main(int argc, char **argv)
         double angle;
         bool success;
         geometry_msgs::Pose target_pose1;
+        moveit::planning_interface::MoveGroup::Plan my_plan;
         for (int itry = 0; itry < 10; itry++)
         {
 
@@ -87,8 +88,6 @@ int main(int argc, char **argv)
 
             group.setPoseTarget(target_pose1);
 
-            // Make plan
-            moveit::planning_interface::MoveGroup::Plan my_plan;
             success = group.plan(my_plan);
             if (success)
                 break;
@@ -99,8 +98,12 @@ int main(int argc, char **argv)
         if (success)
         {
             ROS_INFO("Moving to angle %f (%f, %f)", angle, target_pose1.position.x, target_pose1.position.y);
-            sleep(2.0);
-            group.move();
+            success = group.execute(my_plan);
+            if (success)
+                ROS_INFO("Plan executed");
+            else
+                ROS_INFO("Plan did not execute");
+            sleep(5.0);
         }
         else
             ROS_INFO("Could not move to angle %f (%f, %f)", angle, target_pose1.position.x, target_pose1.position.y);

@@ -12,6 +12,11 @@ void MarkerPose::add6DOFBoxMarker(std::string name, std::string description, im:
 {
     vm::InteractiveMarker interactive_marker = getDefaultMarker(name, description);
 
+
+    interactive_marker.pose.position.x = 0;
+    interactive_marker.pose.position.y = 0;
+    interactive_marker.pose.position.z = 0.7;
+
     addDefaultBoxMarker(interactive_marker);
     add6DOFControl(interactive_marker);
 
