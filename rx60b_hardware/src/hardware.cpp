@@ -60,7 +60,7 @@ public:
 
         for (int j = 0; j <= 6; j++)
         {
-            pos[j] = robotState->position[j] * deg_to_rad;
+            pos[j] = robotState->position[j];
             vel[j] = 0;
             eff[j] = 0;
         }
@@ -83,12 +83,12 @@ public:
         msg->name.push_back("a5");
         msg->name.push_back("a6");
 
-        msg->position.push_back(cmd[0] * rad_to_deg);
-        msg->position.push_back(cmd[1] * rad_to_deg);
-        msg->position.push_back(cmd[2] * rad_to_deg);
-        msg->position.push_back(cmd[3] * rad_to_deg);
-        msg->position.push_back(cmd[4] * rad_to_deg);
-        msg->position.push_back(cmd[5] * rad_to_deg);
+        msg->position.push_back(cmd[0]);
+        msg->position.push_back(cmd[1]);
+        msg->position.push_back(cmd[2]);
+        msg->position.push_back(cmd[3]);
+        msg->position.push_back(cmd[4]);
+        msg->position.push_back(cmd[5]);
 
         msg->header.stamp = ros::Time::now();
 
@@ -110,7 +110,6 @@ private:
     double vel[6];
     double eff[6];
 };
-
 int main( int argc, char** argv )
 {
 
@@ -119,6 +118,7 @@ int main( int argc, char** argv )
     RX60Robot robot;
     RX60_wrapper wrapper;
     controller_manager::ControllerManager cm(&robot, nh_);
+    ros::Publisher state_publisher = nh_.advertise<sensor_msgs::JointState>("/robot_rx60b/controller_joint_states", 10);
 
     ros::AsyncSpinner spinner(0);
     spinner.start();
@@ -127,7 +127,7 @@ int main( int argc, char** argv )
     ROS_INFO("Spinner started!!!");
 
     ros::Time last = ros::Time::now();
-    ros::Rate r(1);
+    ros::Rate r(20);
     int alive_count = 0;
 
 
@@ -148,15 +148,9 @@ int main( int argc, char** argv )
 
         last = ros::Time::now();
 
-        if (alive_count++ > 2)
-        {
-            alive_count = 0;
-            ROS_INFO("alive @ %6.4f ", ros::Time::now().toSec());
-            wrapper.publishRobotState();
+        state_publisher.publish(robotState);
 
-            robot.info();
-        }
-        //ros::spinOnce();
+        ros::spinOnce();
         r.sleep();
     }
 }

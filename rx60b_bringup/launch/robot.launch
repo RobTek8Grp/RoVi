@@ -44,10 +44,4 @@
   <!-- If database loading was enabled, start mongodb as well -->
   <include file="$(find rx60b_moveit_config2)/launch/default_warehouse_db.launch" if="$(arg db)"/>
 
-
-  <rosparam command="load" file="$(find rx60b_hardware)/config/controllers.yaml" />
-  <node name="joint_trajectory_controllers_spawner"
-        pkg="controller_manager" type="spawner" output="screen"
-        args="rx60b_controller" />
-
 </launch>

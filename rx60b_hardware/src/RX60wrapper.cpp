@@ -12,7 +12,7 @@ RX60_wrapper::RX60_wrapper()
 {
 
   _client_handle = _global_node_handler.serviceClient<rx60_wrapper::command>("rx60_controller/rx60_command");
-	this->statePublisher = this->_global_node_handler.advertise<sensor_msgs::JointState>("/robot_rx60b/controller_joint_states", 10);
+    //this->statePublisher = this->_global_node_handler.advertise<sensor_msgs::JointState>("/robot_rx60b/controller_joint_states", 10);
 
 }
 
@@ -27,12 +27,12 @@ void RX60_wrapper::setJointState(sensor_msgs::JointState::Ptr msg)
 
 	service_object.request.command_number = rx60_wrapper::command::Request::SET_JOINT_CONFIGURATION;
 
-	service_object.request.joint1 = msg->position.at(0);
-	service_object.request.joint2 = msg->position.at(1);
-	service_object.request.joint3 = msg->position.at(2);
-	service_object.request.joint4 = msg->position.at(3);
-	service_object.request.joint5 = msg->position.at(4);
-	service_object.request.joint6 = msg->position.at(5);
+    service_object.request.joint1 = msg->position.at(0) * rad_to_deg;
+    service_object.request.joint2 = msg->position.at(1) * rad_to_deg;
+    service_object.request.joint3 = msg->position.at(2) * rad_to_deg;
+    service_object.request.joint4 = msg->position.at(3) * rad_to_deg;
+    service_object.request.joint5 = msg->position.at(4) * rad_to_deg;
+    service_object.request.joint6 = msg->position.at(5) * rad_to_deg;
 
     for(int i = 0 ; i < msg->position.size() ; i++)
     {
@@ -62,18 +62,19 @@ sensor_msgs::JointState::Ptr RX60_wrapper::getJointState(void)
 	if (_client_handle.call(service_object))
 	{
         ROS_INFO("Service replied");
-		message->position.push_back(service_object.response.joint1);
-		message->position.push_back(service_object.response.joint2);
-		message->position.push_back(service_object.response.joint3);
-		message->position.push_back(service_object.response.joint4);
-		message->position.push_back(service_object.response.joint5);
-		message->position.push_back(service_object.response.joint6); 
+        message->name.push_back("a1");
+        message->name.push_back("a2");
+        message->name.push_back("a3");
+        message->name.push_back("a4");
+        message->name.push_back("a5");
+        message->name.push_back("a6");
 
-		for(int i = 0 ; i < message->position.size() ; i++)
-		{
-            //ROS_INFO("%s: Joint %d: %f",ros::this_node::getName().c_str(), i+1, message->position[i]);
-		}
-
+        message->position.push_back(service_object.response.joint1 * deg_to_rad);
+        message->position.push_back(service_object.response.joint2 * deg_to_rad);
+        message->position.push_back(service_object.response.joint3 * deg_to_rad);
+        message->position.push_back(service_object.response.joint4 * deg_to_rad);
+        message->position.push_back(service_object.response.joint5 * deg_to_rad);
+        message->position.push_back(service_object.response.joint6 * deg_to_rad);
 	}
 	else
 	{

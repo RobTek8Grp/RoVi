@@ -68,7 +68,7 @@
       lower="-3.14159265359"
       upper="3.14159265359"
       effort="0"
-      velocity="0.1" />
+      velocity="0.2" />
   </joint>
   <link
     name="arm">
@@ -112,7 +112,7 @@
       lower="-2.0943951"
       upper="2.0943951"
       effort="0"
-      velocity="0.1" />
+      velocity="0.2" />
   </joint>
   <link
     name="elbow">
@@ -156,7 +156,7 @@
       lower="-2.2"
       upper="2.2"
       effort="0"
-      velocity="0.1" />
+      velocity="0.2" />
   </joint>
   <link
     name="forearm">
@@ -200,7 +200,7 @@
       lower="-2.3387412"
       upper="2.3387412"
       effort="0"
-      velocity="0.1" />
+      velocity="0.2" />
   </joint>
   <link
     name="wrist">
@@ -244,7 +244,7 @@
       lower="-2"
       upper="2"
       effort="0"
-      velocity="0.1" />
+      velocity="0.2" />
   </joint>
   <link
     name="tool_flange">
@@ -288,7 +288,7 @@
       lower="-2.0943951"
       upper="2.0943951"
       effort="0"
-      velocity="0.1" />
+      velocity="0.2" />
   </joint>
   
   

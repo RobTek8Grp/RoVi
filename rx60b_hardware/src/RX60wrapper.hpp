@@ -15,6 +15,10 @@
 
 class RX60_wrapper
 {
+private:
+    const double deg_to_rad = -M_PI / 180.0;
+    const double rad_to_deg = -180.0 / M_PI ;
+
 protected:
     ros::NodeHandle _local_node_handler, _global_node_handler;
 	ros::ServiceClient _client_handle;
