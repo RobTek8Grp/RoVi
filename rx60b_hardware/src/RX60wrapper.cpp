@@ -23,6 +23,8 @@ RX60_wrapper::~RX60_wrapper()
 
 void RX60_wrapper::setJointState(sensor_msgs::JointState::Ptr msg)
 {
+	const double rad_to_deg = -180.0 / M_PI ;
+
 	rx60_wrapper::command service_object;
 
 	service_object.request.command_number = rx60_wrapper::command::Request::SET_JOINT_CONFIGURATION;
@@ -51,6 +53,8 @@ void RX60_wrapper::setJointState(sensor_msgs::JointState::Ptr msg)
 
 sensor_msgs::JointState::Ptr RX60_wrapper::getJointState(void)
 {
+	const double deg_to_rad = -M_PI / 180.0;
+
 	// get current joint states
 	rx60_wrapper::command service_object;
 	auto message = sensor_msgs::JointState::Ptr(new sensor_msgs::JointState());
