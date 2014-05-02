@@ -101,8 +101,8 @@ public:
     }
 
 private:
-    const double deg_to_rad = -M_PI / 180.0;
-    const double rad_to_deg = -180.0 / M_PI ;
+//    const double deg_to_rad = -M_PI / 180.0;
+//    const double rad_to_deg = -180.0 / M_PI ;
     hardware_interface::JointStateInterface jnt_state_interface;
     hardware_interface::PositionJointInterface jnt_pos_interface;
     double cmd[6];
