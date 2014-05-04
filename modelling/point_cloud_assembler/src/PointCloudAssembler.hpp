@@ -22,6 +22,8 @@
 
 #include <group4_msgs/PointCloudPose.h>
 
+#include "PointCloudFilter.hpp"
+
 typedef pcl::PointXYZ PointT;
 
 class PointCloudAssembler
@@ -33,6 +35,8 @@ private:
 	std::mutex tLock;
 	tf::TransformBroadcaster tfBroadcast;
 	tf::Transform tf, tfOffset;
+	PointCloudFilter pcFilter;
+	pcl::PointCloud<PointT> auxPointCloud;
 
 	struct
 	{

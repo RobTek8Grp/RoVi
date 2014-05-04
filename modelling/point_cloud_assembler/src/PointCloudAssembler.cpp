@@ -152,13 +152,15 @@ void PointCloudAssembler::processFrame(pcl::PointCloud<PointT>& points, geometry
 	tfp.rotate(q.matrix());
 
 	//	Transform point cloud
-	pcl::PointCloud<PointT> tfPoints;
+	pcl::PointCloud<PointT> tfPoints, filteredPoints;
 	pcl::transformPointCloud(points, tfPoints, tfp);
 
 	ROS_INFO(" point_cloud_assembler: Point cloud size: %d", (int)points.size());
 
+	this->pcFilter.cutOffFilter<PointT>(tfPoints, filteredPoints);
+
 	//	Setup output point cloud
-	pcl::toROSMsg(tfPoints, this->outputMsg.data);
+	pcl::toROSMsg(filteredPoints, this->outputMsg.data);
 
 	this->outputMsg.isPointCloudAssembled = true;
 }
