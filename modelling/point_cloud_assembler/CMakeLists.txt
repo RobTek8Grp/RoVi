@@ -17,6 +17,7 @@ find_package(catkin REQUIRED COMPONENTS
 	group4_msgs
 	pcl_ros
 	tf
+	tf_conversions
 )
 
 #	PCL

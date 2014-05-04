@@ -18,6 +18,7 @@
 #include <pcl/common/transforms.h>
 #include <Eigen/Geometry>
 #include <tf/transform_broadcaster.h>
+#include <tf/tf.h>
 
 #include <group4_msgs/PointCloudPose.h>
 
@@ -31,7 +32,7 @@ private:
 
 	std::mutex tLock;
 	tf::TransformBroadcaster tfBroadcast;
-	tf::Transform tf;
+	tf::Transform tf, tfOffset;
 
 	struct
 	{

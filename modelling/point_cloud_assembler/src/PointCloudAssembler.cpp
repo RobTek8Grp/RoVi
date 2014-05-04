@@ -24,6 +24,11 @@ PointCloudAssembler::PointCloudAssembler() : nodeHandle("~")
 	this->tf.setOrigin(tf::Vector3(0, 0, 0));
 	this->tf.setRotation(tf::Quaternion(0, 0, 0, 1));
 
+	this->tfOffset.setOrigin(tf::Vector3(0, 0, 0));
+	tf::Quaternion q;
+	q.setRPY(-M_PI / 2.0, 0.0, -M_PI / 2.0);
+	this->tfOffset.setRotation(q);
+
 	//	Parameters (group4 msg)
 	this->nodeHandle.param<std::string>("input_topic", this->groupMsg.topic, "/robot_rx60b/carmine_pose");
 	this->groupMsg.lastPoseId = 0;
@@ -55,7 +60,8 @@ void PointCloudAssembler::makeMeSpin(void)
 		this->update();
 
 		//	Braodcast temporary transform
-		this->tfBroadcast.sendTransform(tf::StampedTransform(this->tf, ros::Time::now(), "camera_depth_optical_frame", "base_link"));
+		this->tfBroadcast.sendTransform(tf::StampedTransform(this->tf, ros::Time::now(), "base_link", "camera_depth_optical_frame"));
+//		this->tfBroadcast.sendTransform(tf::StampedTransform(this->tfOffset, ros::Time::now(), "offset_frame", "camera_depth_optical_frame"));
 
 		this->publishMsg();
 
@@ -89,14 +95,13 @@ void PointCloudAssembler::update(void)
 		if ((f.pose_id.data - 1) == this->groupMsg.lastPoseId)
 		{
 			//	Process frame
-			ROS_INFO(" point_cloud_assembler: Processing frame %d/%d ... ", f.pose_id.data, f.pose_id_max.data);
 
 			//	Convert ros type to pcl type
 			pcl::PointCloud<PointT> p;
 			pcl::fromROSMsg(f.carmine_pointcloud, p);	//	TODO: Is chaniging to point cloud given by Frederik
 
+			ROS_INFO(" point_cloud_assembler: Processing frame %d/%d ... ", f.pose_id.data, f.pose_id_max.data);
 			this->processFrame(p, f.carmine_pose);		//	Process points
-
 
 			if (f.pose_id.data == f.pose_id_max.data)
 			{
@@ -115,37 +120,40 @@ void PointCloudAssembler::update(void)
 
 void PointCloudAssembler::processFrame(pcl::PointCloud<PointT>& points, geometry_msgs::Pose& pose)
 {
-	ROS_INFO(" point_cloud_assembler: Processing frame ...");
-//	ROS_INFO(" point_cloud_assembler: Height: %d  -  Width: %d", (int)this->groupMsg.data->carmine_pointcloud.height, (int)this->groupMsg.data->carmine_pointcloud.width);
-
 	//	Setup transform from pose
+	double x = pose.position.x;
+	double y = pose.position.y;
+	double z = pose.position.z;
 	double a = pose.orientation.x;
 	double b = pose.orientation.y;
 	double c = pose.orientation.z;
 	double d = pose.orientation.w;
 
-//	this->tf.setOrigin(tf::Vector3(pose.position.x, pose.position.y, pose.position.z));
-//	this->tf.setRotation(tf::Quaternion(a, b, c, d));
+	tf::Transform t;
+	t.setOrigin(tf::Vector3(x,y,z));
+	t.setRotation(tf::Quaternion(a,b,c,d));
 
-	Eigen::Affine3d t = Eigen::Affine3d();
-	t.setIdentity();
-	t(0,3) = pose.position.x;
-	t(1,3) = pose.position.y;
-	t(2,3) = pose.position.z;
+	this->tf = t * this->tfOffset;
 
-	t(0,0) = a * a + b * b - c * c - d * d;
-	t(0,1) = 2 * b * c - 2 * a * d;
-	t(0,2) = 2 * b * d + 2 * a * c;
-	t(1,0) = 2 * b * c + 2 * a * d;
-	t(1,1) = a * a - b * b + c * c - d * d;
-	t(1,2) = 2 * c * d - 2 * a * b;
-	t(2,0) = 2 * b * d - 2 * a * c;
-	t(2,1) = 2 * c * d - 2 * a * b;
-	t(2,2) = a * a - b * b - c * c + d * d;
+	x = this->tf.getOrigin().getX();
+	y = this->tf.getOrigin().getY();
+	z = this->tf.getOrigin().getZ();
 
-	//	Extract point cloud from msg
+	a = this->tf.getRotation().getX();
+	b = this->tf.getRotation().getY();
+	c = this->tf.getRotation().getZ();
+	d = this->tf.getRotation().getW();
+
+	Eigen::Affine3d tfp = Eigen::Affine3d::Identity();
+	Eigen::Quaterniond q(d,a,b,c);
+	Eigen::Vector3d p(x,y,z);
+
+	tfp.translate(p);
+	tfp.rotate(q.matrix());
+
+	//	Transform point cloud
 	pcl::PointCloud<PointT> tfPoints;
-	pcl::transformPointCloud(points, tfPoints, t);
+	pcl::transformPointCloud(points, tfPoints, tfp);
 
 	ROS_INFO(" point_cloud_assembler: Point cloud size: %d", (int)points.size());
 
@@ -161,6 +169,7 @@ void PointCloudAssembler::publishMsg(void)
 	{
 		ROS_INFO(" point_cloud_assembler: Publishing cloud ...");
 		this->outputMsg.data.header.stamp = ros::Time::now();
+//		this->outputMsg.data.header.frame_id = "camera_depth_optical_frame";
 		this->outputMsg.data.header.frame_id = "base_link";
 		this->outputMsg.pub.publish(this->outputMsg.data);
 		this->outputMsg.isPointCloudAssembled = false;
