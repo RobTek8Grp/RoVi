@@ -1,7 +1,0 @@
-<launch>
-
-	<machine name="rx60" address="rx60" user="student" password="student" />
-	<machine name="local" address= />
-
-	<node machine="rx60" pkg 
-</launch>

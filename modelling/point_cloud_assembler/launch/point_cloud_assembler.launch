@@ -1,8 +1,0 @@
-<launch>
-
-	<node name="point_cloud_assembler" pkg="point_cloud_assembler" type="point_cloud_assembler_node" output="screen">
-		<param name="input_topic" value="/camera/depth/points" />
-		<param name="loop_rate" value="20" />
-	</node>
-
-</launch>
