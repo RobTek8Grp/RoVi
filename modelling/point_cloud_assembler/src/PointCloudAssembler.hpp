@@ -23,6 +23,7 @@
 #include <group4_msgs/PointCloudPose.h>
 
 #include "PointCloudFilter.hpp"
+#include "PointCloudStitching.hpp"
 
 typedef pcl::PointXYZ PointT;
 
@@ -36,6 +37,8 @@ private:
 	tf::TransformBroadcaster tfBroadcast;
 	tf::Transform tf, tfOffset;
 	PointCloudFilter pcFilter;
+	PointCloudStitching pcStitching;
+
 	pcl::PointCloud<PointT> auxPointCloud;
 
 	struct
@@ -60,8 +63,6 @@ private:
 				double max;
 			} z;
 		} cutOffFilterLimits;
-
-
 	} systemParameters;
 
 	struct

@@ -24,7 +24,7 @@ PointCloudAssembler::PointCloudAssembler() : nodeHandle("~")
 	this->tf.setOrigin(tf::Vector3(0, 0, 0));
 	this->tf.setRotation(tf::Quaternion(0, 0, 0, 1));
 
-	this->tfOffset.setOrigin(tf::Vector3(0, 0, 0));
+	this->tfOffset.setOrigin(tf::Vector3(0.0, 0.052, 0.056));//-0.046, 0.052, 0.056));
 	tf::Quaternion q;
 	q.setRPY(-M_PI / 2.0, 0.0, -M_PI / 2.0);
 	this->tfOffset.setRotation(q);
@@ -49,6 +49,9 @@ PointCloudAssembler::PointCloudAssembler() : nodeHandle("~")
 	this->pcFilter = PointCloudFilter(	this->systemParameters.cutOffFilterLimits.x.min, this->systemParameters.cutOffFilterLimits.x.max,
 										this->systemParameters.cutOffFilterLimits.y.min, this->systemParameters.cutOffFilterLimits.y.max,
 										this->systemParameters.cutOffFilterLimits.z.min, this->systemParameters.cutOffFilterLimits.z.max);
+
+	//	Point Cloud Stitching
+	this->pcStitching = PointCloudStitching();
 
 	//	Setup callback
 	this->groupMsg.sub = this->nodeHandle.subscribe<group4_msgs::PointCloudPose>(this->groupMsg.topic, 10, &PointCloudAssembler::msgCallback, this);
@@ -170,10 +173,19 @@ void PointCloudAssembler::processFrame(pcl::PointCloud<PointT>& points, geometry
 
 	ROS_INFO(" point_cloud_assembler: Point cloud size: %d", (int)points.size());
 
+	//	Cut-off filter
 	this->pcFilter.cutOffFilter<PointT>(tfPoints, filteredPoints);
 
+	//	Voxel filter
+	tfPoints = filteredPoints;
+	this->pcFilter.voxelFilter<PointT>(tfPoints, filteredPoints);
+
+	//	Stitching
+	this->pcStitching.stitch(filteredPoints);
+
 	//	Setup output point cloud
-	pcl::toROSMsg(filteredPoints, this->outputMsg.data);
+	pcl::toROSMsg(*this->pcStitching.getStitching(), this->outputMsg.data);
+	//pcl::toROSMsg(filteredPoints, this->outputMsg.data);
 
 	this->outputMsg.isPointCloudAssembled = true;
 }
