@@ -39,8 +39,6 @@ private:
 	PointCloudFilter pcFilter;
 	PointCloudStitching pcStitching;
 
-	pcl::PointCloud<PointT> auxPointCloud;
-
 	struct
 	{
 		struct

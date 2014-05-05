@@ -89,14 +89,14 @@ void PointCloudAssembler::makeMeSpin(void)
 
 void PointCloudAssembler::msgCallback(const group4_msgs::PointCloudPose data)
 {
-	ROS_INFO(" point_cloud_assembler: Message callback ...");
+	//ROS_INFO(" point_cloud_assembler: Message callback ...");
 
 	this->groupMsg.data.push_back(group4_msgs::PointCloudPose(data));
 }
 
 void PointCloudAssembler::update(void)
 {
-	ROS_INFO(" point_cloud_assembler: Updating ...");
+	//ROS_INFO(" point_cloud_assembler: Updating ...");
 
 	//	Process data from buffer when possible (one frame per update)
 	if ((int)this->groupMsg.data.size() > 0)
@@ -111,6 +111,8 @@ void PointCloudAssembler::update(void)
 		if ((f.pose_id.data - 1) == this->groupMsg.lastPoseId)
 		{
 			//	Process frame
+			if (f.pose_id.data == 1)
+				this->pcStitching.reset();
 
 			//	Convert ros type to pcl type
 			pcl::PointCloud<PointT> p;
@@ -121,7 +123,7 @@ void PointCloudAssembler::update(void)
 
 			if (f.pose_id.data == f.pose_id_max.data)
 			{
-				ROS_INFO(" point_cloud_assembler: Resetting counter... ");
+				//ROS_INFO(" point_cloud_assembler: Resetting counter... ");
 				this->groupMsg.lastPoseId = 0;
 
 				this->outputMsg.isPointCloudAssembled = true;
@@ -171,7 +173,7 @@ void PointCloudAssembler::processFrame(pcl::PointCloud<PointT>& points, geometry
 	pcl::PointCloud<PointT> tfPoints, filteredPoints;
 	pcl::transformPointCloud(points, tfPoints, tfp);
 
-	ROS_INFO(" point_cloud_assembler: Point cloud size: %d", (int)points.size());
+	//ROS_INFO(" point_cloud_assembler: Point cloud size: %d", (int)points.size());
 
 	//	Cut-off filter
 	this->pcFilter.cutOffFilter<PointT>(tfPoints, filteredPoints);
@@ -183,22 +185,30 @@ void PointCloudAssembler::processFrame(pcl::PointCloud<PointT>& points, geometry
 	//	Stitching
 	this->pcStitching.stitch(filteredPoints);
 
-	//	Setup output point cloud
-	pcl::toROSMsg(*this->pcStitching.getStitching(), this->outputMsg.data);
-	//pcl::toROSMsg(filteredPoints, this->outputMsg.data);
-
-	this->outputMsg.isPointCloudAssembled = true;
+//	//	Setup output point cloud
+//	pcl::toROSMsg(*this->pcStitching.getStitching(), this->outputMsg.data);
+//	//pcl::toROSMsg(filteredPoints, this->outputMsg.data);
+//
+//	this->outputMsg.isPointCloudAssembled = true;
 }
 
 void PointCloudAssembler::publishMsg(void)
 {
 	if (this->outputMsg.isPointCloudAssembled)
 	{
-		ROS_INFO(" point_cloud_assembler: Publishing cloud ...");
-		this->outputMsg.data.header.stamp = ros::Time::now();
-//		this->outputMsg.data.header.frame_id = "camera_depth_optical_frame";
-		this->outputMsg.data.header.frame_id = "base_link";
-		this->outputMsg.pub.publish(this->outputMsg.data);
+		ROS_INFO(" point_cloud_assembler: Publishing assembled point cloud ...");
+
+		pcl::PointCloud<PointT> voxelFiltered, stitched(*this->pcStitching.getStitching());
+		this->pcFilter.voxelFilter<PointT>(stitched, voxelFiltered);
+
+		ROS_INFO("Stitched point cloud size: %d  --  Filtered point cloud size: %d", (int)stitched.size(), (int)voxelFiltered.size());
+
+		pcl::toROSMsg(voxelFiltered, this->outputMsg.data);
+
 		this->outputMsg.isPointCloudAssembled = false;
 	}
+
+	this->outputMsg.data.header.stamp = ros::Time::now();
+	this->outputMsg.data.header.frame_id = "base_link";
+	this->outputMsg.pub.publish(this->outputMsg.data);
 }
