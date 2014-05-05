@@ -37,6 +37,14 @@ PointCloudAssembler::PointCloudAssembler() : nodeHandle("~")
 	this->nodeHandle.param<std::string>("output_topic", this->outputMsg.topic, "assembled_point_cloud");
 	this->outputMsg.isPointCloudAssembled = false;
 
+	//	System parameters
+	this->nodeHandle.param<double>("cutoff/x_min", this->systemParameters.cutOffFilterLimits.x.min, -.2);
+	this->nodeHandle.param<double>("cutoff/x_max", this->systemParameters.cutOffFilterLimits.x.max, .2);
+	this->nodeHandle.param<double>("cutoff/y_min", this->systemParameters.cutOffFilterLimits.y.min, -.2);
+	this->nodeHandle.param<double>("cutoff/y_max", this->systemParameters.cutOffFilterLimits.y.max, .2);
+	this->nodeHandle.param<double>("cutoff/z_min", this->systemParameters.cutOffFilterLimits.z.min, .5);
+	this->nodeHandle.param<double>("cutoff/z_max", this->systemParameters.cutOffFilterLimits.z.max, 1.0);
+
 	//	Setup callback
 	this->groupMsg.sub = this->nodeHandle.subscribe<group4_msgs::PointCloudPose>(this->groupMsg.topic, 10, &PointCloudAssembler::msgCallback, this);
 

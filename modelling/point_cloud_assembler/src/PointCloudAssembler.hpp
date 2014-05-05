@@ -40,6 +40,32 @@ private:
 
 	struct
 	{
+		struct
+		{
+			struct
+			{
+				double min;
+				double max;
+			} x;
+
+			struct
+			{
+				double min;
+				double max;
+			} y;
+
+			struct
+			{
+				double min;
+				double max;
+			} z;
+		} cutOffFilterLimits;
+
+
+	} systemParameters;
+
+	struct
+	{
 		ros::Subscriber sub;
 		std::string topic;
 		std::vector<group4_msgs::PointCloudPose> data;
