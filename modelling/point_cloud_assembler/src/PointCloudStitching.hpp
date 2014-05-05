@@ -27,12 +27,11 @@ class PointCloudStitching
 private:
 	pcl::PointCloud<PointT> stitching;
 
-	void reset(void);
-
 public:
 	PointCloudStitching();
 	virtual ~PointCloudStitching();
 
+	void reset(void);
 	pcl::PointCloud<PointT>::ConstPtr getStitching(void);
 	int stitch(pcl::PointCloud<PointT>& points);
 };

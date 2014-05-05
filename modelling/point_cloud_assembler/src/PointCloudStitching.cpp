@@ -63,9 +63,9 @@ int PointCloudStitching::stitch(pcl::PointCloud<PointT>& points)
 
 	//	Align
 	pcl::IterativeClosestPointNonLinear<pcl::PointNormal, pcl::PointNormal> registration;
-	registration.setTransformationEpsilon(1e-5);
+	registration.setTransformationEpsilon(1e-6);
 	//	Set the maximum distance between two correspondences
-	registration.setMaxCorrespondenceDistance(0.02);
+	registration.setMaxCorrespondenceDistance(0.01);
 	//	Set the point representation
 	registration.setPointRepresentation (boost::make_shared<const MyPointNormal> (pointNormal));
 
@@ -73,15 +73,15 @@ int PointCloudStitching::stitch(pcl::PointCloud<PointT>& points)
 	registration.setInputTarget(pointsWithNormalTarget);
 	registration.setMaximumIterations(30);
 
-	PCL_INFO("Sizes:  %d  --  %d", (int)pointsWithNormalSource.get()->size(), (int)pointsWithNormalTarget.get()->size());
+	PCL_ERROR("Stitching ...\nSource size: %d  --  Target size: %d\n", (int)pointsWithNormalSource.get()->size(), (int)pointsWithNormalTarget.get()->size());
 
 	Eigen::Matrix4f tf = Eigen::Matrix4f::Identity();
 	pcl::PointCloud<pcl::PointNormal>::Ptr regResult = pointsWithNormalSource;
 	registration.align(*regResult);
 	tf = registration.getFinalTransformation().inverse();
 
-	pcl::transformPointCloud(*pointsWithNormalTarget, *regResult, tf);
-	*regResult += *pointsWithNormalSource;
+	pcl::transformPointCloud(*pointsWithNormalSource, *regResult, tf);
+	*regResult += *pointsWithNormalTarget;
 
 	pcl::copyPointCloud(*regResult, this->stitching);
 
