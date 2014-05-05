@@ -9,6 +9,7 @@
 #define POINTCLOUDFILTER_HPP_
 
 #include <pcl/filters/passthrough.h>
+#include <pcl/filters/voxel_grid.h>
 
 class PointCloudFilter
 {
@@ -79,6 +80,15 @@ public:
 		pass.filter(pointsOut);
 
 		return 0;
+	}
+
+	template <class _type> int voxelFilter(pcl::PointCloud<_type>& pointsIn, pcl::PointCloud<_type>& pointsOut)
+	{
+		pcl::VoxelGrid<_type> grid;
+
+		grid.setLeafSize(0.005, 0.005, 0.005);
+		grid.setInputCloud(pointsIn.makeShared());
+		grid.filter(pointsOut);
 	}
 };
 
