@@ -45,10 +45,19 @@ PointCloudAssembler::PointCloudAssembler() : nodeHandle("~")
 	this->nodeHandle.param<double>("cutoff/z_min", this->systemParameters.cutOffFilterLimits.z.min, .5);
 	this->nodeHandle.param<double>("cutoff/z_max", this->systemParameters.cutOffFilterLimits.z.max, 1.0);
 
-	//	Point Cloud Filter
-	this->pcFilter = PointCloudFilter(	this->systemParameters.cutOffFilterLimits.x.min, this->systemParameters.cutOffFilterLimits.x.max,
-										this->systemParameters.cutOffFilterLimits.y.min, this->systemParameters.cutOffFilterLimits.y.max,
-										this->systemParameters.cutOffFilterLimits.z.min, this->systemParameters.cutOffFilterLimits.z.max);
+	//	Point Cloud Filters (Cut-Off)
+	this->pcFilter.setCutOffLimits(	this->systemParameters.cutOffFilterLimits.x.min, this->systemParameters.cutOffFilterLimits.x.max,
+									this->systemParameters.cutOffFilterLimits.y.min, this->systemParameters.cutOffFilterLimits.y.max,
+									this->systemParameters.cutOffFilterLimits.z.min, this->systemParameters.cutOffFilterLimits.z.max);
+
+	//	Voxel filter
+	this->nodeHandle.param<double>("voxel/msg/x", this->systemParameters.voxelLeafSizesBS.x, 0.001);
+	this->nodeHandle.param<double>("voxel/msg/y", this->systemParameters.voxelLeafSizesBS.y, 0.001);
+	this->nodeHandle.param<double>("voxel/msg/z", this->systemParameters.voxelLeafSizesBS.z, 0.001);
+
+	this->nodeHandle.param<double>("voxel/stitch/x", this->systemParameters.voxelLeafSizesAS.x, 0.005);
+	this->nodeHandle.param<double>("voxel/stitch/y", this->systemParameters.voxelLeafSizesAS.y, 0.005);
+	this->nodeHandle.param<double>("voxel/stitch/z", this->systemParameters.voxelLeafSizesAS.z, 0.005);
 
 	//	Point Cloud Stitching
 	this->pcStitching = PointCloudStitching();
@@ -180,6 +189,9 @@ void PointCloudAssembler::processFrame(pcl::PointCloud<PointT>& points, geometry
 
 	//	Voxel filter
 	tfPoints = filteredPoints;
+	this->pcFilter.setVoxelLeafSizes(	this->systemParameters.voxelLeafSizesBS.x,
+										this->systemParameters.voxelLeafSizesBS.y,
+										this->systemParameters.voxelLeafSizesBS.z);
 	this->pcFilter.voxelFilter<PointT>(tfPoints, filteredPoints);
 
 	//	Stitching
@@ -199,6 +211,9 @@ void PointCloudAssembler::publishMsg(void)
 		ROS_INFO(" point_cloud_assembler: Publishing assembled point cloud ...");
 
 		pcl::PointCloud<PointT> voxelFiltered, stitched(*this->pcStitching.getStitching());
+		this->pcFilter.setVoxelLeafSizes(	this->systemParameters.voxelLeafSizesAS.x,
+											this->systemParameters.voxelLeafSizesAS.y,
+											this->systemParameters.voxelLeafSizesAS.z);
 		this->pcFilter.voxelFilter<PointT>(stitched, voxelFiltered);
 
 		ROS_INFO("Stitched point cloud size: %d  --  Filtered point cloud size: %d", (int)stitched.size(), (int)voxelFiltered.size());

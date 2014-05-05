@@ -10,5 +10,15 @@
 		<param name="cutoff/y_max" value="0.2" />		<!--	[m]		-->
 		<param name="cutoff/z_min" value="0.5" />		<!--	[m]		-->
 		<param name="cutoff/z_max" value="1.0" />		<!--	[m]		-->
+		
+		<!-- Voxel filter (before stitching) -->
+		<param name="voxel/msg/x" value="0.007" />		<!--	[m]		-->
+		<param name="voxel/msg/y" value="0.007" />		<!--	[m]		-->
+		<param name="voxel/msg/z" value="0.007" />		<!--	[m]		-->
+		
+		<!-- Voxel filter (after stitching) -->
+		<param name="voxel/stitch/x" value="0.007" />	<!--	[m]		-->
+		<param name="voxel/stitch/y" value="0.007" />	<!--	[m]		-->
+		<param name="voxel/stitch/z" value="0.007" />	<!--	[m]		-->
 	</node>
 </launch>

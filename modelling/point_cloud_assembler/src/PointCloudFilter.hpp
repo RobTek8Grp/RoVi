@@ -31,30 +31,40 @@ private:
 			double min;
 			double max;
 		} z;
-	} limits;
+	} cutOffLimits;
+
+	struct
+	{
+		double x;
+		double y;
+		double z;
+	} voxelLeafSizes;
 
 public:
 	PointCloudFilter()
 	{
-		this->limits.x.min = -1.0;
-		this->limits.x.max = 1.0;
-		this->limits.y.min = -1.0;
-		this->limits.y.max = 1.0;
-		this->limits.z.min = -1.0;
-		this->limits.z.max = 1.0;
-	}
+		//	Cut-Off filter limits
+		this->cutOffLimits.x.min = -1.0;
+		this->cutOffLimits.x.max = 1.0;
+		this->cutOffLimits.y.min = -1.0;
+		this->cutOffLimits.y.max = 1.0;
+		this->cutOffLimits.z.min = -1.0;
+		this->cutOffLimits.z.max = 1.0;
 
-	PointCloudFilter(double minX, double maxX, double minY, double maxY, double minZ, double maxZ)
-	{
-		this->limits.x.min = minX;
-		this->limits.x.max = maxX;
-		this->limits.y.min = minY;
-		this->limits.y.max = maxY;
-		this->limits.z.min = minZ;
-		this->limits.z.max = maxZ;
+		//	Voxel filter leaf sizes
 	}
 
 	virtual ~PointCloudFilter(){}
+
+	void setCutOffLimits(double minX, double maxX, double minY, double maxY, double minZ, double maxZ)
+	{
+		this->cutOffLimits.x.min = minX;
+		this->cutOffLimits.x.max = maxX;
+		this->cutOffLimits.y.min = minY;
+		this->cutOffLimits.y.max = maxY;
+		this->cutOffLimits.z.min = minZ;
+		this->cutOffLimits.z.max = maxZ;
+	}
 
 	template <class _type> int cutOffFilter(pcl::PointCloud<_type>& pointsIn, pcl::PointCloud<_type>& pointsOut)
 	{
@@ -64,29 +74,36 @@ public:
 		//	Set x-limits
 		pass.setInputCloud(pointsIn.makeShared());
 		pass.setFilterFieldName("x");
-		pass.setFilterLimits(limits.x.min,limits.x.max);
+		pass.setFilterLimits(cutOffLimits.x.min,cutOffLimits.x.max);
 		pass.filter(aux1);
 
 		//	Set y-limits
 		pass.setInputCloud(aux1.makeShared());
 		pass.setFilterFieldName("y");
-		pass.setFilterLimits(limits.y.min,limits.y.max);
+		pass.setFilterLimits(cutOffLimits.y.min,cutOffLimits.y.max);
 		pass.filter(aux2);
 
 		//	Set z-limits
 		pass.setInputCloud(aux2.makeShared());
 		pass.setFilterFieldName("z");
-		pass.setFilterLimits(limits.z.min,limits.z.max);
+		pass.setFilterLimits(cutOffLimits.z.min,cutOffLimits.z.max);
 		pass.filter(pointsOut);
 
 		return 0;
+	}
+
+	void setVoxelLeafSizes(double x, double y, double z)
+	{
+		this->voxelLeafSizes.x = x;
+		this->voxelLeafSizes.y = y;
+		this->voxelLeafSizes.z = z;
 	}
 
 	template <class _type> int voxelFilter(pcl::PointCloud<_type>& pointsIn, pcl::PointCloud<_type>& pointsOut)
 	{
 		pcl::VoxelGrid<_type> grid;
 
-		grid.setLeafSize(0.005, 0.005, 0.005);
+		grid.setLeafSize(this->voxelLeafSizes.x, this->voxelLeafSizes.y, this->voxelLeafSizes.z);
 		grid.setInputCloud(pointsIn.makeShared());
 		grid.filter(pointsOut);
 	}

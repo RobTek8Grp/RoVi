@@ -61,6 +61,20 @@ private:
 				double max;
 			} z;
 		} cutOffFilterLimits;
+
+		struct
+		{
+			double x;
+			double y;
+			double z;
+		} voxelLeafSizesBS;
+
+		struct
+		{
+			double x;
+			double y;
+			double z;
+		} voxelLeafSizesAS;
 	} systemParameters;
 
 	struct
