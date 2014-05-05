@@ -38,9 +38,9 @@ public:
 		pass.setFilterFieldName("z");
 		pass.setFilterLimits(.5,1.0);
 		pass.filter(pointsOut);
+
+		return 0;
 	}
 };
-
-
 
 #endif /* POINTCLOUDFILTER_HPP_ */
