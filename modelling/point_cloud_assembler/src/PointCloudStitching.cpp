@@ -80,14 +80,14 @@ int PointCloudStitching::stitch(pcl::PointCloud<PointT>& points, double epsilon,
 	registration.setMaximumIterations(30);
 
 	PCL_ERROR("Source size: %d  --  Target size: %d\n", (int)pointsWithNormalSource.get()->size(), (int)pointsWithNormalTarget.get()->size());
-	PCL_ERROR("Parameters  -  Epsilon: %f  --  MAXCD: %f\n", epsilon, maxCorrespondanceDistance);
-
 
 	Eigen::Matrix4f tf = Eigen::Matrix4f::Identity();
 	pcl::PointCloud<pcl::PointNormal>::Ptr regResult = pointsWithNormalSource;
+
 	PCL_ERROR("Stitching ... ");
 	registration.align(*regResult);
 	PCL_ERROR("Done!\n");
+
 	tf = registration.getFinalTransformation().inverse();
 
 	pcl::transformPointCloud(*pointsWithNormalSource, *regResult, tf);
