@@ -124,7 +124,6 @@ int main( int argc, char** argv )
     spinner.start();
     //ros::MultiThreadedSpinner spinner(4);
     //spinner.spin();
-    ROS_INFO("Spinner started!!!");
 
     ros::Time last = ros::Time::now();
     ros::Rate r(20);
@@ -135,14 +134,11 @@ int main( int argc, char** argv )
     {
         ros::Duration period = ros::Time::now() - last;
 
-        ROS_INFO("GetJointState");
         const sensor_msgs::JointState::Ptr robotState = wrapper.getJointState();
         robot.read(robotState);
 
-        ROS_INFO("Update controller");
         cm.update(ros::Time::now(), period);
 
-        ROS_INFO("Get controller update");
         const sensor_msgs::JointState::Ptr robotCmd = robot.write();
         wrapper.setJointState(robotCmd);
 

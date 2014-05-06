@@ -38,12 +38,12 @@ void RX60_wrapper::setJointState(sensor_msgs::JointState::Ptr msg)
 
     for(int i = 0 ; i < msg->position.size() ; i++)
     {
-        ROS_INFO("%s: Setting joint %d: %f",ros::this_node::getName().c_str(), i+1, msg->position[i]);
+        //ROS_INFO("%s: Setting joint %d: %f",ros::this_node::getName().c_str(), i+1, msg->position[i]);
     }
 
 	if (_client_handle.call(service_object))
 	{
-		ROS_INFO("%s: Moving robot",ros::this_node::getName().c_str());
+        //ROS_INFO("%s: Moving robot",ros::this_node::getName().c_str());
 	}
 	else
 	{
@@ -59,13 +59,10 @@ sensor_msgs::JointState::Ptr RX60_wrapper::getJointState(void)
 	rx60_wrapper::command service_object;
 	auto message = sensor_msgs::JointState::Ptr(new sensor_msgs::JointState());
 
-    ROS_INFO("Creating service object");
   	service_object.request.command_number = rx60_wrapper::command::Request::GET_JOINT_CONFIGURATION;
 
-    ROS_INFO("Trying to call service");
 	if (_client_handle.call(service_object))
-	{
-        ROS_INFO("Service replied");
+    {
         message->name.push_back("a1");
         message->name.push_back("a2");
         message->name.push_back("a3");
@@ -83,8 +80,7 @@ sensor_msgs::JointState::Ptr RX60_wrapper::getJointState(void)
 	else
 	{
 		ROS_ERROR("%s: Failed in getJointState method",ros::this_node::getName().c_str());
-	}
-    ROS_INFO("Done fetching service info");
+    }
 
 	return message;
 }
