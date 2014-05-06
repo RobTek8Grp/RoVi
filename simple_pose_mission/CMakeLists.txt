@@ -3,7 +3,7 @@ project(simple_pose_mission)
 
 
 # find_package(catkin REQUIRED COMPONENTS roscpp moveit_core moveit_ros_planning moveit_ros_planning_interface pluginlib)
-find_package(catkin REQUIRED COMPONENTS roscpp moveit_core moveit_ros_planning moveit_ros_planning_interface visualization_msgs interactive_markers)
+find_package(catkin REQUIRED COMPONENTS roscpp moveit_core moveit_ros_planning moveit_ros_planning_interface visualization_msgs interactive_markers group4_msgs)
 find_package(Boost REQUIRED system filesystem date_time thread)
 find_package(Eigen REQUIRED)
 find_package(orocos_kdl REQUIRED)
