@@ -8,8 +8,6 @@
 #ifndef POINTCLOUDASSEMBLER_HPP_
 #define POINTCLOUDASSEMBLER_HPP_
 
-#include <mutex>
-
 #include <string.h>
 #include <ros/ros.h>
 #include <pcl_ros/point_cloud.h>
@@ -33,7 +31,6 @@ private:
 	ros::NodeHandle nodeHandle;
 	int spinRate;
 
-	std::mutex tLock;
 	tf::TransformBroadcaster tfBroadcast;
 	tf::Transform tf, tfOffset;
 	PointCloudFilter pcFilter;
@@ -67,14 +64,13 @@ private:
 			double x;
 			double y;
 			double z;
-		} voxelLeafSizesBS;
+		} voxelLeafSize;
 
 		struct
 		{
-			double x;
-			double y;
-			double z;
-		} voxelLeafSizesAS;
+			double epsilon;
+			double maxCorrespondenceDistance;
+		} stitching;;
 	} systemParameters;
 
 	struct

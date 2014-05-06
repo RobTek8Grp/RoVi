@@ -32,7 +32,8 @@ public:
 
 	void reset(void);
 	pcl::PointCloud<PointT>::ConstPtr getStitching(void);
-	int stitch(pcl::PointCloud<PointT>& points);
+	void setStitching(pcl::PointCloud<PointT>& points);
+	int stitch(pcl::PointCloud<PointT>& points, double epsilon, double maxCorrespondanceDistance);
 };
 
 #endif /* POINTCLOUDSTITCHING_HPP_ */

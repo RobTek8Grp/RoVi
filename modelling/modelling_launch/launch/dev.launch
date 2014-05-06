@@ -8,17 +8,21 @@
 		<param name="cutoff/x_max" value="0.2" />		<!--	[m]		-->
 		<param name="cutoff/y_min" value="-0.2" />		<!--	[m]		-->
 		<param name="cutoff/y_max" value="0.2" />		<!--	[m]		-->
-		<param name="cutoff/z_min" value="0.5" />		<!--	[m]		-->
-		<param name="cutoff/z_max" value="1.0" />		<!--	[m]		-->
+		<param name="cutoff/z_min" value="0.85" />		<!--	[m]		-->
+		<param name="cutoff/z_max" value="0.86" />		<!--	[m]		-->
 		
 		<!-- Voxel filter (before stitching) -->
-		<param name="voxel/msg/x" value="0.007" />		<!--	[m]		-->
-		<param name="voxel/msg/y" value="0.007" />		<!--	[m]		-->
-		<param name="voxel/msg/z" value="0.007" />		<!--	[m]		-->
+		<param name="voxel/msg/x" value="0.003" />		<!--	[m]		-->
+		<param name="voxel/msg/y" value="0.003" />		<!--	[m]		-->
+		<param name="voxel/msg/z" value="0.003" />		<!--	[m]		-->
 		
 		<!-- Voxel filter (after stitching) -->
-		<param name="voxel/stitch/x" value="0.007" />	<!--	[m]		-->
-		<param name="voxel/stitch/y" value="0.007" />	<!--	[m]		-->
-		<param name="voxel/stitch/z" value="0.007" />	<!--	[m]		-->
+		<param name="voxel/stitch/x" value="0.005" />	<!--	[m]		-->
+		<param name="voxel/stitch/y" value="0.005" />	<!--	[m]		-->
+		<param name="voxel/stitch/z" value="0.005" />	<!--	[m]		-->
+		
+		<!-- Stitching -->
+		<param name="stitching/epsilon" value="1e-6" />							<!--	[m]		-->
+		<param name="stitching/max_correspondance_distance" value="0.006" />	<!--	[m]		-->
 	</node>
 </launch>

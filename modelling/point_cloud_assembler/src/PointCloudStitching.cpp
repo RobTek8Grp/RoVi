@@ -27,7 +27,13 @@ pcl::PointCloud<PointT>::ConstPtr PointCloudStitching::getStitching(void)
 	return this->stitching.makeShared();
 }
 
-int PointCloudStitching::stitch(pcl::PointCloud<PointT>& points)
+void PointCloudStitching::setStitching(pcl::PointCloud<PointT>& points)
+{
+	this->stitching = pcl::PointCloud<PointT>(points);
+}
+
+
+int PointCloudStitching::stitch(pcl::PointCloud<PointT>& points, double epsilon, double maxCorrespondanceDistance)
 {
 	if (this->stitching.size() == 0)
 	{
@@ -63,9 +69,9 @@ int PointCloudStitching::stitch(pcl::PointCloud<PointT>& points)
 
 	//	Align
 	pcl::IterativeClosestPointNonLinear<pcl::PointNormal, pcl::PointNormal> registration;
-	registration.setTransformationEpsilon(1e-6);
+	registration.setTransformationEpsilon(epsilon);
 	//	Set the maximum distance between two correspondences
-	registration.setMaxCorrespondenceDistance(0.01);
+	registration.setMaxCorrespondenceDistance(maxCorrespondanceDistance);
 	//	Set the point representation
 	registration.setPointRepresentation (boost::make_shared<const MyPointNormal> (pointNormal));
 
@@ -73,11 +79,15 @@ int PointCloudStitching::stitch(pcl::PointCloud<PointT>& points)
 	registration.setInputTarget(pointsWithNormalTarget);
 	registration.setMaximumIterations(30);
 
-	PCL_ERROR("Stitching ...\nSource size: %d  --  Target size: %d\n", (int)pointsWithNormalSource.get()->size(), (int)pointsWithNormalTarget.get()->size());
+	PCL_ERROR("Source size: %d  --  Target size: %d\n", (int)pointsWithNormalSource.get()->size(), (int)pointsWithNormalTarget.get()->size());
+	PCL_ERROR("Parameters  -  Epsilon: %f  --  MAXCD: %f\n", epsilon, maxCorrespondanceDistance);
+
 
 	Eigen::Matrix4f tf = Eigen::Matrix4f::Identity();
 	pcl::PointCloud<pcl::PointNormal>::Ptr regResult = pointsWithNormalSource;
+	PCL_ERROR("Stitching ... ");
 	registration.align(*regResult);
+	PCL_ERROR("Done!\n");
 	tf = registration.getFinalTransformation().inverse();
 
 	pcl::transformPointCloud(*pointsWithNormalSource, *regResult, tf);
@@ -87,3 +97,4 @@ int PointCloudStitching::stitch(pcl::PointCloud<PointT>& points)
 
 	return 0;
 }
+
