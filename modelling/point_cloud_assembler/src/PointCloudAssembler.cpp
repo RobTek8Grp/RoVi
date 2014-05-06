@@ -21,15 +21,6 @@ PointCloudAssembler::PointCloudAssembler() : nodeHandle("~")
 {
 	this->nodeHandle.param<int>("spin_rate", this->spinRate, 2);
 
-	this->tf.setOrigin(tf::Vector3(0, 0, 0));
-	this->tf.setRotation(tf::Quaternion(0, 0, 0, 1));
-
-//	this->tfOffset.setOrigin(tf::Vector3(-0.046, 0.052, 0.056));	//	Gotten from TF
-	this->tfOffset.setOrigin(tf::Vector3(0.0, 0.052, 0.056));		//	Kent's calibration
-	tf::Quaternion q;
-	q.setRPY(-M_PI / 2.0, 0.0, -M_PI / 2.0);
-	this->tfOffset.setRotation(q);
-
 	//	Parameters (group4 msg)
 	this->nodeHandle.param<std::string>("input_topic", this->groupMsg.topic, "/robot_rx60b/carmine_pose");
 	this->groupMsg.lastPoseId = 0;
@@ -52,6 +43,17 @@ PointCloudAssembler::PointCloudAssembler() : nodeHandle("~")
 
 	this->nodeHandle.param<double>("stitching/epsilon", this->systemParameters.stitching.epsilon, 1e-6);
 	this->nodeHandle.param<double>("stitching/max_correspondance_distance", this->systemParameters.stitching.maxCorrespondenceDistance, 0.01);
+
+	//	Transforms
+	this->tf.setOrigin(tf::Vector3(0, 0, 0));
+	this->tf.setRotation(tf::Quaternion(0, 0, 0, 1));
+
+	//	Offset transform
+	tf::Quaternion q;
+	q.setRPY(-M_PI / 2.0, 0.0, -M_PI / 2.0);
+//	this->tfOffset.setOrigin(tf::Vector3(-0.046, 0.052, 0.056));	//	Gotten from TF
+	this->tfOffset.setOrigin(tf::Vector3(0.0, 0.052, 0.056));		//	Kent's calibration
+	this->tfOffset.setRotation(q);
 
 	//	Point Cloud Filters (Cut-Off)
 	this->pcFilter.setCutOffLimits(	this->systemParameters.cutOffFilterLimits.x.min, this->systemParameters.cutOffFilterLimits.x.max,
