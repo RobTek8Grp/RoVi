@@ -28,14 +28,21 @@ typedef pcl::PointXYZ PointT;
 class PointCloudAssembler
 {
 private:
+	//	Node specifics
 	ros::NodeHandle nodeHandle;
-	int spinRate;
 
+	int spinRate;
+	bool publishAuxPoints, broadcastTf;
+	ros::Publisher auxPub;
+	sensor_msgs::PointCloud2 auxPoints;
+
+	//	Aux. variables
 	tf::TransformBroadcaster tfBroadcast;
 	tf::Transform tf, tfOffset;
 	PointCloudFilter pcFilter;
 	PointCloudStitching pcStitching;
 
+	//	Structs for system- parameters, input and output
 	struct
 	{
 		struct
@@ -91,8 +98,10 @@ private:
 		bool isPointCloudAssembled;
 	} outputMsg;
 
+	//	Callback
 	void msgCallback(const group4_msgs::PointCloudPose data);
 
+	//	Functions
 	void update(void);
 	void processFrame(pcl::PointCloud<PointT>& points, geometry_msgs::Pose& pose);
 	void publishMsg(void);

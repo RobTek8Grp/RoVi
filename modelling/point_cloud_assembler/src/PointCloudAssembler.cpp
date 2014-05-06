@@ -21,6 +21,11 @@ PointCloudAssembler::PointCloudAssembler() : nodeHandle("~")
 {
 	this->nodeHandle.param<int>("spin_rate", this->spinRate, 2);
 
+	//	Debug (aux. info)
+	this->nodeHandle.param<bool>("debug", this->publishAuxPoints, true);
+	this->nodeHandle.param<bool>("broadcast_transform", this->broadcastTf, true);
+	this->auxPub = this->nodeHandle.advertise<sensor_msgs::PointCloud2>("debug/auxPoints", 10);
+
 	//	Parameters (group4 msg)
 	this->nodeHandle.param<std::string>("input_topic", this->groupMsg.topic, "/robot_rx60b/carmine_pose");
 	this->groupMsg.lastPoseId = 0;
@@ -90,8 +95,8 @@ void PointCloudAssembler::makeMeSpin(void)
 
 		this->update();
 
-		//	Braodcast temporary transform
-		this->tfBroadcast.sendTransform(tf::StampedTransform(this->tf, ros::Time::now(), "base_link", "camera_depth_optical_frame"));
+		if (this->broadcastTf)
+			this->tfBroadcast.sendTransform(tf::StampedTransform(this->tf, ros::Time::now(), "base_link", "camera_depth_optical_frame"));
 
 		this->publishMsg();
 
@@ -188,6 +193,10 @@ void PointCloudAssembler::processFrame(pcl::PointCloud<PointT>& points, geometry
 	//	Cut-off filter
 	this->pcFilter.cutOffFilter<PointT>(tfPoints, filteredPoints);
 
+	//	Aux. point cloud
+	if (this->publishAuxPoints)
+		pcl::toROSMsg(filteredPoints, this->auxPoints);
+
 	//	Stitch new point cloud into stitching
 	this->pcStitching.stitch(	filteredPoints,
 								this->systemParameters.stitching.epsilon,
@@ -203,7 +212,7 @@ void PointCloudAssembler::publishMsg(void)
 {
 	if (this->outputMsg.isPointCloudAssembled)
 	{
-		ROS_INFO(" point_cloud_assembler: Publishing assembled point cloud ...");
+		ROS_INFO(" point_cloud_assembler: Publishing assembled point cloud (Size: %d) ...", (int)(this->pcStitching.getStitching().get()->size()));
 
 		pcl::toROSMsg(*this->pcStitching.getStitching(), this->outputMsg.data);
 
@@ -213,4 +222,11 @@ void PointCloudAssembler::publishMsg(void)
 	this->outputMsg.data.header.stamp = ros::Time::now();
 	this->outputMsg.data.header.frame_id = "base_link";
 	this->outputMsg.pub.publish(this->outputMsg.data);
+
+	if (this->publishAuxPoints)
+	{
+		this->auxPoints.header.stamp = ros::Time::now();
+		this->auxPoints.header.frame_id = "base_link";
+		this->auxPub.publish(this->auxPoints);
+	}
 }
