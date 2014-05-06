@@ -24,7 +24,8 @@ PointCloudAssembler::PointCloudAssembler() : nodeHandle("~")
 	this->tf.setOrigin(tf::Vector3(0, 0, 0));
 	this->tf.setRotation(tf::Quaternion(0, 0, 0, 1));
 
-	this->tfOffset.setOrigin(tf::Vector3(0.0, 0.052, 0.056));//-0.046, 0.052, 0.056));
+//	this->tfOffset.setOrigin(tf::Vector3(-0.046, 0.052, 0.056));	//	Gotten from TF
+	this->tfOffset.setOrigin(tf::Vector3(0.0, 0.052, 0.056));		//	Kent's calibration
 	tf::Quaternion q;
 	q.setRPY(-M_PI / 2.0, 0.0, -M_PI / 2.0);
 	this->tfOffset.setRotation(q);
@@ -45,19 +46,22 @@ PointCloudAssembler::PointCloudAssembler() : nodeHandle("~")
 	this->nodeHandle.param<double>("cutoff/z_min", this->systemParameters.cutOffFilterLimits.z.min, .5);
 	this->nodeHandle.param<double>("cutoff/z_max", this->systemParameters.cutOffFilterLimits.z.max, 1.0);
 
+	this->nodeHandle.param<double>("voxel/x", this->systemParameters.voxelLeafSize.x, 0.005);
+	this->nodeHandle.param<double>("voxel/y", this->systemParameters.voxelLeafSize.y, 0.005);
+	this->nodeHandle.param<double>("voxel/z", this->systemParameters.voxelLeafSize.z, 0.005);
+
+	this->nodeHandle.param<double>("stitching/epsilon", this->systemParameters.stitching.epsilon, 1e-6);
+	this->nodeHandle.param<double>("stitching/max_correspondance_distance", this->systemParameters.stitching.maxCorrespondenceDistance, 0.01);
+
 	//	Point Cloud Filters (Cut-Off)
 	this->pcFilter.setCutOffLimits(	this->systemParameters.cutOffFilterLimits.x.min, this->systemParameters.cutOffFilterLimits.x.max,
 									this->systemParameters.cutOffFilterLimits.y.min, this->systemParameters.cutOffFilterLimits.y.max,
 									this->systemParameters.cutOffFilterLimits.z.min, this->systemParameters.cutOffFilterLimits.z.max);
 
 	//	Voxel filter
-	this->nodeHandle.param<double>("voxel/x", this->systemParameters.voxelLeafSize.x, 0.005);
-	this->nodeHandle.param<double>("voxel/y", this->systemParameters.voxelLeafSize.y, 0.005);
-	this->nodeHandle.param<double>("voxel/z", this->systemParameters.voxelLeafSize.z, 0.005);
-
-	//	Stiching
-	this->nodeHandle.param<double>("stitching/epsilon", this->systemParameters.stitching.epsilon, 1e-6);
-	this->nodeHandle.param<double>("stitching/max_correspondance_distance", this->systemParameters.stitching.maxCorrespondenceDistance, 0.01);
+	this->pcFilter.setVoxelLeafSizes(	this->systemParameters.voxelLeafSize.x,
+										this->systemParameters.voxelLeafSize.y,
+										this->systemParameters.voxelLeafSize.z);
 
 	//	Point Cloud Stitching
 	this->pcStitching = PointCloudStitching();
@@ -189,9 +193,6 @@ void PointCloudAssembler::processFrame(pcl::PointCloud<PointT>& points, geometry
 
 	//	Voxel filter after stitching
 	pcl::PointCloud<PointT> voxelFiltered, stitched(*this->pcStitching.getStitching());
-	this->pcFilter.setVoxelLeafSizes(	this->systemParameters.voxelLeafSize.x,
-										this->systemParameters.voxelLeafSize.y,
-										this->systemParameters.voxelLeafSize.z);
 	this->pcFilter.voxelFilter<PointT>(stitched, voxelFiltered);
 	this->pcStitching.setStitching(voxelFiltered);
 }
