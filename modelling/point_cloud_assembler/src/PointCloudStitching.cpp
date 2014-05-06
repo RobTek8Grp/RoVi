@@ -90,6 +90,12 @@ int PointCloudStitching::stitch(pcl::PointCloud<PointT>& points, double epsilon,
 
 	tf = registration.getFinalTransformation().inverse();
 
+//	PCL_ERROR("\nTransform:\n");
+//	PCL_ERROR("| %f %f %f %f |\n", tf(0,0), tf(0,1), tf (0,2), tf(0,3));
+//	PCL_ERROR("| %f %f %f %f |\n", tf(1,0), tf(1,1), tf (1,2), tf(1,3));
+//	PCL_ERROR("| %f %f %f %f |\n", tf(2,0), tf(2,1), tf (2,2), tf(2,3));
+//	PCL_ERROR("| %f %f %f %f |\n\n", tf(3,0), tf(3,1), tf (3,2), tf(3,3));
+
 	pcl::transformPointCloud(*pointsWithNormalSource, *regResult, tf);
 	*regResult += *pointsWithNormalTarget;
 
