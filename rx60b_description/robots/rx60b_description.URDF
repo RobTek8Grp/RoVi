@@ -8,7 +8,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://rx60b_description/meshes_rob/base_link.stl" />
+          filename="package://rx60b_description/meshes/base_link.stl" />
       </geometry>
       <material
         name="">
@@ -22,10 +22,30 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://rx60b_description/meshes_rob/base_link.stl" />
+          filename="package://rx60b_description/meshes/base_link.stl" />
       </geometry>
     </collision>
   </link>
+  <link
+    name="powerconnector">
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://rx60b_description/meshes/powerconnector.stl" />
+      </geometry>
+    </collision>
+  </link>
+  <joint name="powerconnector_joint" type="fixed">
+    <origin
+      xyz="-0.15 0 0.09"
+      rpy="1.57079632679 1.57079632679 0" />
+    <parent link="base_link" />
+    <child link="powerconnector" />
+    <axis xyz="1 0 0" />
+  </joint>
   <link
     name="shoulder">
     <visual>
@@ -34,7 +54,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://rx60b_description/meshes_rob/shoulder.stl" />
+          filename="package://rx60b_description/meshes/shoulder.stl" />
       </geometry>
       <material
         name="">
@@ -48,7 +68,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://rx60b_description/meshes_rob/shoulder.stl" />
+          filename="package://rx60b_description/meshes/shoulder.stl" />
       </geometry>
     </collision>
   </link>
@@ -78,7 +98,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://rx60b_description/meshes_rob/arm.stl" />
+          filename="package://rx60b_description/meshes/arm.stl" />
       </geometry>
       <material
         name="">
@@ -92,7 +112,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://rx60b_description/meshes_rob/arm.stl" />
+          filename="package://rx60b_description/meshes/arm.stl" />
       </geometry>
     </collision>
   </link>
@@ -122,7 +142,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://rx60b_description/meshes_rob/elbow.stl" />
+          filename="package://rx60b_description/meshes/elbow.stl" />
       </geometry>
       <material
         name="">
@@ -136,7 +156,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://rx60b_description/meshes_rob/elbow.stl" />
+          filename="package://rx60b_description/meshes/elbow.stl" />
       </geometry>
     </collision>
   </link>
@@ -166,7 +186,7 @@
         rpy="0 0 1.57079632679" />
       <geometry>
         <mesh
-          filename="package://rx60b_description/meshes_rob/forearm.stl" />
+          filename="package://rx60b_description/meshes/forearm.stl" />
       </geometry>
       <material
         name="">
@@ -180,7 +200,7 @@
         rpy="0 0 1.57079632679" />
       <geometry>
         <mesh
-          filename="package://rx60b_description/meshes_rob/forearm.stl" />
+          filename="package://rx60b_description/meshes/forearm.stl" />
       </geometry>
     </collision>
   </link>
@@ -210,7 +230,7 @@
         rpy="0 0 1.57079632679" />
       <geometry>
         <mesh
-          filename="package://rx60b_description/meshes_rob/wrist.stl" />
+          filename="package://rx60b_description/meshes/wrist.stl" />
       </geometry>
       <material
         name="">
@@ -224,7 +244,7 @@
         rpy="0 0 1.57079632679" />
       <geometry>
         <mesh
-          filename="package://rx60b_description/meshes_rob/wrist.stl" />
+          filename="package://rx60b_description/meshes/wrist.stl" />
       </geometry>
     </collision>
   </link>
