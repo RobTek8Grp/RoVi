@@ -10,3 +10,6 @@
 #	Ignore ROS
 CATKIN_IGNORE
 .bag
+
+# Ignore QT Creator CMAKE files
+CMakeLists.txt.user
