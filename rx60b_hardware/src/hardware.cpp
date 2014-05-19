@@ -126,7 +126,7 @@ int main( int argc, char** argv )
     //spinner.spin();
 
     ros::Time last = ros::Time::now();
-    ros::Rate r(20);
+    ros::Rate r(10);
     int alive_count = 0;
 
 
