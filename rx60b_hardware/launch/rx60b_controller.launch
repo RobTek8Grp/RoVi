@@ -10,7 +10,7 @@
       #type: joint_state_controller/JointStateController
       type: position_controllers/JointTrajectoryController
       #joint_mode: 1 #position
-      publish_rate: 50
+      publish_rate: 20
       joints:
         - a1
         - a2
