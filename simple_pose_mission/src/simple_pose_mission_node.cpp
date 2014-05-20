@@ -163,9 +163,10 @@ int main(int argc, char **argv)
     const double radius = 0.45; // 0.5
     const double pitch_step = 0.2;
     const int circle_points = 8;
+    const double plan_time = 30;
     //const int pose_id_max = circle_points * 3;
     const ros::Duration wait_settle(1.0);
-    const ros::Duration wait_camera(2.0);
+    const ros::Duration wait_camera(0.5);
     const ros::Duration wait_notreached(3.0);
     const ros::Duration wait_reset(30.0);
 
@@ -202,6 +203,7 @@ int main(int argc, char **argv)
     group.setPoseReferenceFrame(frame_id);
     //group.setWorkspace(-1.5,-1.5,1.5,1.5,0,1);
     group.setGoalTolerance(0.01f);
+    group.setPlanningTime(plan_time);
 
     group4_msgs::PointCloudPose msg;
     msg.header.frame_id = frame_id;
@@ -223,7 +225,7 @@ int main(int argc, char **argv)
         }
 
         object_center = marker.getPose("object_center");
-        poses = generatePoses(object_center, circle_points, pitch_step, radius);
+        //poses = generatePoses(object_center, circle_points, pitch_step, radius);
         visualizePoses(poses, frame_id,markerPublisher);
 
         NumberedPose numbered_pose = *poses_itt;
@@ -267,7 +269,7 @@ int main(int argc, char **argv)
             if (success)
                 break;
             else
-                ROS_INFO("Plan unsuccessfull.. Retrying!");
+                ROS_INFO("Plan unsuccessfull.. Retrying! (%i)", itry);
         }
 
         if (true)

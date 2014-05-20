@@ -43,12 +43,14 @@
     <disable_collisions link1="arm" link2="shoulder" reason="Adjacent" />
     <disable_collisions link1="arm" link2="tool_flange" reason="Never" />
     <disable_collisions link1="arm" link2="wrist" reason="Never" />
+    <disable_collisions link1="base_link" link2="collision_object" reason="Adjacent" />
     <disable_collisions link1="base_link" link2="elbow" reason="Never" />
     <disable_collisions link1="base_link" link2="powerconnector" reason="Adjacent" />
     <disable_collisions link1="base_link" link2="shoulder" reason="Adjacent" />
     <disable_collisions link1="cameratool" link2="elbow" reason="Never" />
     <disable_collisions link1="cameratool" link2="tool_flange" reason="Adjacent" />
     <disable_collisions link1="cameratool" link2="wrist" reason="Never" />
+    <disable_collisions link1="collision_object" link2="powerconnector" reason="Never" />
     <disable_collisions link1="elbow" link2="forearm" reason="Adjacent" />
     <disable_collisions link1="elbow" link2="shoulder" reason="Never" />
     <disable_collisions link1="elbow" link2="tool_flange" reason="Never" />

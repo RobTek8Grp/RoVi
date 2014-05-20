@@ -8,13 +8,12 @@ Panels:
         - /MotionPlanning1/Scene Robot1
         - /MotionPlanning1/Planning Request1
         - /MotionPlanning1/Planned Path1
-        - /TF1
         - /TF1/Frames1
         - /MarkerArray1
         - /MarkerArray1/Namespaces1
         - /InteractiveMarkers1
       Splitter Ratio: 0.74256
-    Tree Height: 558
+    Tree Height: 163
   - Class: rviz/Help
     Name: Help
   - Class: rviz/Views
@@ -97,6 +96,11 @@ Visualization Manager:
             Show Axes: false
             Show Trail: false
             Value: true
+          collision_object:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+            Value: true
           elbow:
             Alpha: 1
             Show Axes: false
@@ -128,7 +132,7 @@ Visualization Manager:
             Show Trail: false
             Value: true
         Loop Animation: true
-        Robot Alpha: 0.5
+        Robot Alpha: 0.3
         Show Robot Collision: false
         Show Robot Visual: true
         Show Trail: false
@@ -148,7 +152,7 @@ Visualization Manager:
         Interactive Marker Size: 0
         Joint Violation Color: 255; 0; 255
         Planning Group: bumblebee
-        Query Goal State: true
+        Query Goal State: false
         Query Start State: false
         Show Workspace: false
         Start State Alpha: 1
@@ -209,6 +213,11 @@ Visualization Manager:
             Show Axes: false
             Show Trail: false
             Value: true
+          collision_object:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+            Value: true
           elbow:
             Alpha: 1
             Show Axes: false
@@ -240,78 +249,23 @@ Visualization Manager:
             Show Trail: false
             Value: true
         Robot Alpha: 0.5
-        Show Robot Collision: false
-        Show Robot Visual: true
+        Show Robot Collision: true
+        Show Robot Visual: false
       Value: true
     - Class: rviz/TF
-      Enabled: true
+      Enabled: false
       Frame Timeout: 15
       Frames:
         All Enabled: false
-        arm:
-          Value: false
-        asus_depthcam:
-          Value: false
-        asus_projector:
-          Value: false
-        asus_rgbcam:
-          Value: false
-        base_link:
-          Value: false
-        bumblebee_cam1:
-          Value: false
-        bumblebee_cam2:
-          Value: false
-        camera_link:
-          Value: false
-        cameratool:
-          Value: false
-        elbow:
-          Value: false
-        forearm:
-          Value: false
-        object_center:
-          Value: false
-        powerconnector:
-          Value: false
-        shoulder:
-          Value: false
-        tool_flange:
-          Value: false
-        wrist:
-          Value: false
       Marker Scale: 1
       Name: TF
       Show Arrows: true
       Show Axes: true
       Show Names: true
       Tree:
-        base_link:
-          object_center:
-            {}
-          powerconnector:
-            {}
-          shoulder:
-            arm:
-              elbow:
-                forearm:
-                  wrist:
-                    tool_flange:
-                      cameratool:
-                        asus_depthcam:
-                          {}
-                        asus_projector:
-                          {}
-                        asus_rgbcam:
-                          {}
-                        bumblebee_cam1:
-                          {}
-                        bumblebee_cam2:
-                          {}
-                        camera_link:
-                          {}
+        {}
       Update Interval: 0
-      Value: true
+      Value: false
     - Class: rviz/MarkerArray
       Enabled: true
       Marker Topic: /simple_pose_mission/poses
@@ -322,13 +276,13 @@ Visualization Manager:
       Value: true
     - Class: rviz/InteractiveMarkers
       Enable Transparency: true
-      Enabled: false
+      Enabled: true
       Name: InteractiveMarkers
       Show Axes: false
       Show Descriptions: true
       Show Visual Aids: false
       Update Topic: /object_center/update
-      Value: false
+      Value: true
   Enabled: true
   Global Options:
     Background Color: 48; 48; 48
@@ -343,37 +297,37 @@ Visualization Manager:
   Value: true
   Views:
     Current:
-      Class: rviz/XYOrbit
-      Distance: 1.66676
+      Class: rviz/Orbit
+      Distance: 1.73738
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.06
         Stereo Focal Distance: 1
         Swap Stereo Eyes: false
         Value: false
       Focal Point:
-        X: -0.312067
-        Y: 0.29289
-        Z: -1.93715e-07
+        X: -0.0337764
+        Y: -0.214103
+        Z: 0.420567
       Name: Current View
       Near Clip Distance: 0.01
-      Pitch: 0.524795
+      Pitch: 0.094796
       Target Frame: base_link
-      Value: XYOrbit (rviz)
-      Yaw: 5.50187
+      Value: Orbit (rviz)
+      Yaw: 0.764261
     Saved: ~
 Window Geometry:
   Displays:
     collapsed: false
-  Height: 1145
+  Height: 1152
   Help:
     collapsed: false
   Hide Left Dock: false
   Hide Right Dock: false
   Motion Planning:
     collapsed: false
-  QMainWindow State: 000000ff00000000fd0000000100000000000002a200000429fc0200000005fb000000100044006900730070006c0061007900730100000033000002c7000000d801000005fb0000000800480065006c00700000000342000000bb0000007101000005fb0000000a0056006900650077007300000003b0000000b0000000ab01000005fb0000000c00430061006d00650072006100000002ff000001610000000000000000fb0000001e004d006f00740069006f006e00200050006c0061006e006e0069006e006701000002fd0000015f00000156010000050000047f0000042900000001000000020000000100000002fc0000000100000002000000010000000a0054006f006f006c00730100000000ffffffff0000000000000000
+  QMainWindow State: 000000ff00000000fd0000000100000000000002a200000430fc0200000005fb000000100044006900730070006c00610079007301000000330000013c000000d801000005fb0000000800480065006c00700000000342000000bb0000007101000005fb0000000a005600690065007700730100000172000000b0000000ab01000005fb0000000c00430061006d00650072006100000002ff000001610000000000000000fb0000001e004d006f00740069006f006e00200050006c0061006e006e0069006e006701000002250000023e0000015601000005000004db0000043000000001000000020000000100000002fc0000000100000002000000010000000a0054006f006f006c00730100000000ffffffff0000000000000000
   Views:
     collapsed: false
-  Width: 1828
-  X: 88
-  Y: 28
+  Width: 1920
+  X: -2
+  Y: 25

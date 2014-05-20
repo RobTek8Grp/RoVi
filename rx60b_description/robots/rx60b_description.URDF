@@ -424,5 +424,23 @@
     <child link="camera_link" />
     <axis xyz="1 0 0" />
   </joint>
-
+  
+  
+  <link name="collision_object">
+    <collision>
+      <geometry>
+        <cylinder length="0.15" radius="0.08"/>
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="collision_object_joint"
+    type="fixed">
+    <origin
+      xyz="0.0 0.0 0.75"
+      rpy="0 0 0" />
+    <parent link="base_link" />
+    <child link="collision_object" />
+    <axis xyz="1 0 0" />
+  </joint>
 </robot>
