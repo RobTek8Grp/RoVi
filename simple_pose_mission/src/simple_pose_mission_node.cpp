@@ -14,6 +14,8 @@
 #include <std_msgs/Bool.h>
 #include <group4_msgs/PointCloudPose.h>
 
+#include <tf/transform_listener.h>
+
 geometry_msgs::Pose tfPoseToGeometryPose(const tf::Pose tPose)
 {
     geometry_msgs::Pose gPose;
@@ -58,6 +60,7 @@ class NumberedPose
 public:
     geometry_msgs::Pose pose;
     geometry_msgs::Pose markerpose;
+    tf::Pose pose_tf;
     int pose_id;
     int pose_id_max;
 };
@@ -97,12 +100,14 @@ NumberedPoses generatePoses(tf::Pose& object_center,const int circle_points, con
             pose.markerpose = tfTransformToGeometryPose(goal_pose);
 
             tf::Transform pose_orient;
-            pose_orient.setOrigin(tf::Vector3(radius,0,0));
+            pose_orient.setOrigin(tf::Vector3(0,0,0));
             pose_rotation_quaternion.setRPY(0,0,0);
             pose_rotation_quaternion.setRPY(-M_PI/2,0,-M_PI/2);
             pose_orient.setRotation(pose_rotation_quaternion);
 
-            pose.pose = tfTransformToGeometryPose(goal_pose*pose_orient);
+            pose.pose_tf = goal_pose*pose_orient;
+            pose.pose = tfTransformToGeometryPose(pose.pose_tf);
+            //pose.pose = pose.markerpose;
 
             pose.pose_id = pose_id;
             pose.pose_id_max = pose_id_max;
@@ -159,14 +164,23 @@ int main(int argc, char **argv)
     const double pitch_step = 0.3;
     const int circle_points = 8;
     //const int pose_id_max = circle_points * 3;
-    const ros::Duration wait_settle(1,0);
-    const ros::Duration wait_camera(1,0);
-    const ros::Duration wait_reset(30);
-    const std::string planning_group = "bumblebee"; //robot
-    const std::string end_effector = "bumblebee_cam1"; // bumblebee_cam1
+    const ros::Duration wait_settle(1.0);
+    const ros::Duration wait_camera(0.0);
+    const ros::Duration wait_reset(30.0);
+
+    // Unable to construct goal representation
+    //const std::string planning_group = "bumblebee"; //robot, bumblebee
+    //const std::string end_effector = "bumblebee_cam1"; // bumblebee_cam1, tool_flange
+
+    // Working with group.setGoalTolerance(0.1f); and pose.pose = pose.markerpose;
+    //const std::string planning_group = "bumblebee"; //robot, bumblebee
+    //const std::string end_effector = "tool_flange"; // bumblebee_cam1, tool_flange
+
+    const std::string planning_group = "bumblebee"; //robot, bumblebee
+    const std::string end_effector = "tool_flange"; // bumblebee_cam1, tool_flange
+
     const std::string plannerId = "PRMkConfigDefault";
     const std::string frame_id = "base_link";
-    altitude_t altitude_state = LOW;
 
     ros::init (argc, argv, "simple_pose_mission");
     ros::AsyncSpinner spinner(1);
@@ -175,16 +189,18 @@ int main(int argc, char **argv)
     ros::Publisher cameratate_pub = node_handle.advertise<group4_msgs::PointCloudPose>("/robot_rx60b/camerapose", 5);
     ros::Publisher markerPublisher = node_handle.advertise<visualization_msgs::MarkerArray>("/simple_pose_mission/poses", 10);
 
+    tf::TransformListener listener;
+
     // Marker
     MarkerPose marker("object_center");
     addObjectCenterMarker(marker);
 
     // Robot and scene
     moveit::planning_interface::MoveGroup group(planning_group);
-    //group.setPlannerId(plannerId);
-    //group.setPoseReferenceFrame(frame_id);
-    //group.setEndEffector(end_effector);
-    group.setWorkspace(-1.5,-1.5,1.5,1.5,0,1);
+    group.setPlannerId(plannerId);
+    group.setPoseReferenceFrame(frame_id);
+    //group.setWorkspace(-1.5,-1.5,1.5,1.5,0,1);
+    group.setGoalTolerance(0.01f);
 
     group4_msgs::PointCloudPose msg;
     msg.header.frame_id = frame_id;
@@ -213,10 +229,23 @@ int main(int argc, char **argv)
 
         ROS_INFO("Moving to pose %i of %i", numbered_pose.pose_id, numbered_pose.pose_id_max);
 
+
+
+        tf::StampedTransform transform;
+        try{
+          listener.lookupTransform("/bumblebee_cam1", "/tool_flange",
+                                   ros::Time(0), transform);
+        }
+        catch (tf::TransformException ex){
+          ROS_ERROR("%s",ex.what());
+        }
+
+        tf::Pose p = numbered_pose.pose_tf * transform;
+
         geometry_msgs::Pose desired_pose;
-        //desired_pose = tfPoseToGeometryPose(object_center);
+        desired_pose = tfPoseToGeometryPose(p);
         std::cout << numbered_pose.pose;
-        group.setPoseTarget(numbered_pose.pose, end_effector);
+        group.setPoseTarget(desired_pose, end_effector);
         //group.setPositionTarget(desired_pose.position.x,desired_pose.position.y,desired_pose.position.z,end_effector);
         //group.setOrientationTarget(numbered_pose.pose.orientation.x, numbered_pose.pose.orientation.y,numbered_pose.pose.orientation.z,numbered_pose.pose.orientation.w, end_effector);
         //group.setPositionTarget(0,0,0,end_effector);
@@ -230,6 +259,7 @@ int main(int argc, char **argv)
         success = false;
         for (int itry = 0; itry < 1; itry++)
         {
+            group.setStartStateToCurrentState();
             success = group.move();
             if (success)
                 break;
@@ -266,7 +296,8 @@ int main(int argc, char **argv)
             poses_itt = poses.begin();
             wait_reset.sleep();
         }
-        poses_itt++;
+        else
+            poses_itt++;
 
     }
     group.stop();
