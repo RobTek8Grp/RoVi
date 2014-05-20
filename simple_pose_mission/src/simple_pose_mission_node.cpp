@@ -37,7 +37,7 @@ void addObjectCenterMarker(MarkerPose& marker)
     tf::Quaternion marker_rotation;
     marker_rotation.setRPY(0,0,0.5-M_PI);
     marker_pose.setRotation(marker_rotation);
-    marker_pose.setOrigin(tf::Vector3(0,0,0.7));
+    marker_pose.setOrigin(tf::Vector3(0,0,0.8));
     marker.add6DOFBoxMarkerTF("object_center","Object center", marker_pose);
     //return marker;
 }
@@ -77,7 +77,7 @@ NumberedPoses generatePoses(tf::Pose& object_center,const int circle_points, con
     for (int altitude_pos = 0; altitude_pos < 3; altitude_pos++)
     {
         double angle_pitch = pitch_angle_base + (pitch_step * (double)altitude_pos);
-        angle_step *= -1;
+        //angle_step *= -1;
 
         for (double yaw_pos = 0; yaw_pos < circle_points; yaw_pos++)
         {
@@ -160,12 +160,13 @@ enum altitude_t {HIGH, MID, LOW, Count};
 
 int main(int argc, char **argv)
 {
-    const double radius = 0.4; // 0.5
-    const double pitch_step = 0.3;
+    const double radius = 0.45; // 0.5
+    const double pitch_step = 0.2;
     const int circle_points = 8;
     //const int pose_id_max = circle_points * 3;
     const ros::Duration wait_settle(1.0);
-    const ros::Duration wait_camera(0.0);
+    const ros::Duration wait_camera(2.0);
+    const ros::Duration wait_notreached(3.0);
     const ros::Duration wait_reset(30.0);
 
     // Unable to construct goal representation
@@ -252,14 +253,16 @@ int main(int argc, char **argv)
         //group.setPoseReferenceFrame("object_center");
 
 
-        ROS_INFO("Planning frame %s",group.getPlanningFrame().c_str());
-        ROS_INFO("Planning pose ref frame %s", group.getPoseReferenceFrame().c_str());
+        //ROS_INFO("Planning frame %s",group.getPlanningFrame().c_str());
+        //ROS_INFO("Planning pose ref frame %s", group.getPoseReferenceFrame().c_str());
 
 
         success = false;
-        for (int itry = 0; itry < 1; itry++)
+        for (int itry = 0; itry < 5; itry++)
         {
+
             group.setStartStateToCurrentState();
+            wait_notreached.sleep();
             success = group.move();
             if (success)
                 break;
