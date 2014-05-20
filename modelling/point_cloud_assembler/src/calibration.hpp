@@ -5,8 +5,8 @@
  *      Author: kent
  */
 
-#ifndef POINTCLOUDSTITCHING_HPP_
-#define POINTCLOUDSTITCHING_HPP_
+#ifndef CALIBRATION_HPP_
+#define CALIBRATION_HPP_
 
 #include <pcl/point_types.h>
 #include <pcl/point_cloud.h>
@@ -27,13 +27,13 @@ private:
 	pcl::PointCloud<PointT> stitching;
 
 public:
-	PointCloudStitching();
-	virtual ~PointCloudStitching();
+	Calibration();
+	virtual ~Calibration();
 
 	void reset(void);
 	pcl::PointCloud<PointT>::ConstPtr getStitching(void);
 	void setStitching(pcl::PointCloud<PointT>& points);
-	int stitch(pcl::PointCloud<PointT>& points, double epsilon, double maxCorrespondanceDistance);
+	Eigen::Matrix4f  stitch(pcl::PointCloud<PointT>& points, double epsilon, double maxCorrespondanceDistance);
 };
 
 #endif /* POINTCLOUDSTITCHING_HPP_ */

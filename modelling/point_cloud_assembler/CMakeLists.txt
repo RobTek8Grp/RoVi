@@ -34,6 +34,6 @@ add_definitions(-std=c++0x ${PCL_DEFINITIONS})
 #     Build 	#
 #################
 
-add_executable		(point_cloud_assembler_node src/PointCloudAssembler.cpp src/PointCloudStitching.cpp)
+add_executable		(point_cloud_assembler_node src/PointCloudAssembler.cpp src/PointCloudStitching.cpp src/calibration.cpp)
 add_dependencies	(point_cloud_assembler_node point_cloud_assembler_generate_messages_cpp)
 target_link_libraries	(point_cloud_assembler_node ${catkin_LIBRARIES} ${PCL_LIBRARIES})

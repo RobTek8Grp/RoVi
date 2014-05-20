@@ -5,14 +5,14 @@
  *      Author: kent
  */
 
-#include "PointCloudStitching.hpp"
+#include "calibration.hpp"
 
-Calibration::PointCloudStitching()
+Calibration::Calibration()
 {
 	this->reset();
 }
 
-Calibration::~PointCloudStitching()
+Calibration::~Calibration()
 {
 
 }
@@ -33,12 +33,12 @@ void Calibration::setStitching(pcl::PointCloud<PointT>& points)
 }
 
 
-int Calibration::stitch(pcl::PointCloud<PointT>& points, double epsilon, double maxCorrespondanceDistance)
+Eigen::Matrix4f Calibration::stitch(pcl::PointCloud<PointT>& points, double epsilon, double maxCorrespondanceDistance)
 {
 	if (this->stitching.size() == 0)
 	{
 		pcl::copyPointCloud(points, this->stitching);
-		return 0;
+		return Eigen::Matrix4f::Identity(); // Hardcore hack !!
 	}
 
 	//	Compute surface normals and curvature

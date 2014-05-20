@@ -23,7 +23,7 @@ PointCloudAssembler::PointCloudAssembler() : nodeHandle("~")
 
 	//	Debug (aux. info)
 	this->nodeHandle.param<bool>("debug", this->publishAuxPoints, true);
-	this->nodeHandle.param<bool>("broadcast_transform", this->broadcastTf, true);
+	this->nodeHandle.param<bool>("broadcast_transform", this->broadcastTf, false);
 	this->auxPub = this->nodeHandle.advertise<sensor_msgs::PointCloud2>("debug/auxPoints", 10);
 
 	//	Parameters (group4 msg)
@@ -33,6 +33,8 @@ PointCloudAssembler::PointCloudAssembler() : nodeHandle("~")
 	//	Parameters (output msg)
 	this->nodeHandle.param<std::string>("output_topic", this->outputMsg.topic, "assembled_point_cloud");
 	this->outputMsg.isPointCloudAssembled = false;
+	
+	this->nodeHandle.param<std::string>("calibrationMsg", this->calibrationMsg.topic, "calibration");
 
 	//	System parameters
 	this->nodeHandle.param<double>("cutoff/x_min", this->systemParameters.cutOffFilterLimits.x.min, -.2);
@@ -78,6 +80,7 @@ PointCloudAssembler::PointCloudAssembler() : nodeHandle("~")
 
 	//	Setup publisher
 	this->outputMsg.pub = this->nodeHandle.advertise<sensor_msgs::PointCloud2>(this->outputMsg.topic, 10);
+	this->calibrationMsg.pub = this->nodeHandle.advertise<geometry_msgs::PoseStamped>(this->calibrationMsg.topic, 10);
 }
 
 PointCloudAssembler::~PointCloudAssembler() {
@@ -216,20 +219,25 @@ void PointCloudAssembler::processFrame(pcl::PointCloud<PointT>& points, geometry
 	tf3d.getRotation(tfqt);
 
 	//	Publish error transform
-	this->calibrationMsg.data.header.frame_id = this->groupMsg.data.pose_id.back()
-	this->calibrationMsg.data.position.x = tf(0,3);
-	this->calibrationMsg.data.position.y = tf(1,3);
-	this->calibrationMsg.data.position.z = tf(2,3);
+	std::ostringstream s;
+	s << this->groupMsg.data.back().pose_id;
+	this->calibrationMsg.data.header.frame_id = s.str();
+	this->calibrationMsg.data.pose.position.x = tf(0,3);
+	this->calibrationMsg.data.pose.position.y = tf(1,3);
+	this->calibrationMsg.data.pose.position.z = tf(2,3);
 
-	this->calibrationMsg.data.orientation.x = tfqt.x();
-	this->calibrationMsg.data.orientation.y = tfqt.y();
-	this->calibrationMsg.data.orientation.z = tfqt.z();
-	this->calibrationMsg.data.orientation.w = tfqt.w();
+	this->calibrationMsg.data.pose.orientation.x = tfqt.x();
+	this->calibrationMsg.data.pose.orientation.y = tfqt.y();
+	this->calibrationMsg.data.pose.orientation.z = tfqt.z();
+	this->calibrationMsg.data.pose.orientation.w = tfqt.w();
 
 	//	Voxel filter after stitching
 	pcl::PointCloud<PointT> voxelFiltered, stitched(*this->pcStitching.getStitching());
 	this->pcFilter.voxelFilter<PointT>(stitched, voxelFiltered);
 	this->pcStitching.setStitching(voxelFiltered);
+	
+	this->calibrationMsg.data.header.stamp = ros::Time::now();
+	this->calibrationMsg.pub.publish(this->calibrationMsg.data);
 }
 
 void PointCloudAssembler::publishMsg(void)
@@ -247,8 +255,6 @@ void PointCloudAssembler::publishMsg(void)
 	this->outputMsg.data.header.frame_id = "base_link";
 	this->outputMsg.pub.publish(this->outputMsg.data);
 
-	this->calibrationMsg.data.header.stamp = ros::Time::now();
-	this->calibrationMsg.pub.publish(this->calibrationMsg.data);
 
 	if (this->publishAuxPoints)
 	{

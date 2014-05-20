@@ -22,6 +22,7 @@
 
 #include "PointCloudFilter.hpp"
 #include "PointCloudStitching.hpp"
+#include "calibration.hpp"
 
 typedef pcl::PointXYZ PointT;
 
@@ -41,6 +42,7 @@ private:
 	tf::Transform tf, tfOffset;
 	PointCloudFilter pcFilter;
 	PointCloudStitching pcStitching;
+	Calibration calibration;
 
 	//	Structs for system- parameters, input and output
 	struct
@@ -102,7 +104,7 @@ private:
 	{
 		ros::Publisher pub;
 		std::string topic;
-		sensor_msgs::PoseStamped data;
+		geometry_msgs::PoseStamped data;
 	} calibrationMsg;
 
 	//	Callback
