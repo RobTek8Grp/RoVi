@@ -7,6 +7,12 @@ Panels:
         - /MotionPlanning1
         - /MotionPlanning1/Scene Robot1
         - /MotionPlanning1/Planning Request1
+        - /MotionPlanning1/Planned Path1
+        - /TF1
+        - /TF1/Frames1
+        - /MarkerArray1
+        - /MarkerArray1/Namespaces1
+        - /InteractiveMarkers1
       Splitter Ratio: 0.74256
     Tree Height: 558
   - Class: rviz/Help
@@ -141,8 +147,8 @@ Visualization Manager:
         Goal State Color: 250; 128; 0
         Interactive Marker Size: 0
         Joint Violation Color: 255; 0; 255
-        Planning Group: robot
-        Query Goal State: false
+        Planning Group: bumblebee
+        Query Goal State: true
         Query Start State: false
         Show Workspace: false
         Start State Alpha: 1
@@ -234,44 +240,46 @@ Visualization Manager:
             Show Trail: false
             Value: true
         Robot Alpha: 0.5
-        Show Robot Collision: true
-        Show Robot Visual: false
+        Show Robot Collision: false
+        Show Robot Visual: true
       Value: true
     - Class: rviz/TF
       Enabled: true
       Frame Timeout: 15
       Frames:
-        All Enabled: true
+        All Enabled: false
         arm:
-          Value: true
+          Value: false
         asus_depthcam:
-          Value: true
+          Value: false
         asus_projector:
-          Value: true
+          Value: false
         asus_rgbcam:
-          Value: true
+          Value: false
         base_link:
-          Value: true
+          Value: false
         bumblebee_cam1:
-          Value: true
+          Value: false
         bumblebee_cam2:
-          Value: true
+          Value: false
         camera_link:
-          Value: true
+          Value: false
         cameratool:
-          Value: true
+          Value: false
         elbow:
-          Value: true
+          Value: false
         forearm:
-          Value: true
+          Value: false
+        object_center:
+          Value: false
         powerconnector:
-          Value: true
+          Value: false
         shoulder:
-          Value: true
+          Value: false
         tool_flange:
-          Value: true
+          Value: false
         wrist:
-          Value: true
+          Value: false
       Marker Scale: 1
       Name: TF
       Show Arrows: true
@@ -279,6 +287,8 @@ Visualization Manager:
       Show Names: true
       Tree:
         base_link:
+          object_center:
+            {}
           powerconnector:
             {}
           shoulder:
@@ -302,6 +312,23 @@ Visualization Manager:
                           {}
       Update Interval: 0
       Value: true
+    - Class: rviz/MarkerArray
+      Enabled: true
+      Marker Topic: /simple_pose_mission/poses
+      Name: MarkerArray
+      Namespaces:
+        Markers: true
+      Queue Size: 100
+      Value: true
+    - Class: rviz/InteractiveMarkers
+      Enable Transparency: true
+      Enabled: false
+      Name: InteractiveMarkers
+      Show Axes: false
+      Show Descriptions: true
+      Show Visual Aids: false
+      Update Topic: /object_center/update
+      Value: false
   Enabled: true
   Global Options:
     Background Color: 48; 48; 48
@@ -317,22 +344,22 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/XYOrbit
-      Distance: 2.9965
+      Distance: 1.66676
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.06
         Stereo Focal Distance: 1
         Swap Stereo Eyes: false
         Value: false
       Focal Point:
-        X: 0.113567
-        Y: 0.10592
-        Z: 2.23518e-07
+        X: -0.312067
+        Y: 0.29289
+        Z: -1.93715e-07
       Name: Current View
       Near Clip Distance: 0.01
-      Pitch: 0.459797
+      Pitch: 0.524795
       Target Frame: base_link
       Value: XYOrbit (rviz)
-      Yaw: 2.56495
+      Yaw: 5.50187
     Saved: ~
 Window Geometry:
   Displays:

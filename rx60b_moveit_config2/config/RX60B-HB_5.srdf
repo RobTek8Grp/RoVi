@@ -33,7 +33,7 @@
         <joint name="a6" value="0" />
     </group_state>
     <!--END EFFECTOR: Purpose: Represent information about an end effector.-->
-    <end_effector name="bumblebee_cam1_joint" parent_link="bumblebee_cam1" group="robot" parent_group="bumblebee" />
+    <end_effector name="bumblebee_cam1" parent_link="bumblebee_cam1" group="robot" parent_group="bumblebee" />
     <end_effector name="tool_flange" parent_link="tool_flange" group="robot" parent_group="robot" />
     <!--DISABLE COLLISIONS: By default it is assumed that any link of the robot could potentially come into collision with any other link in the robot. This tag disables collision checking between a specified pair of links. -->
     <disable_collisions link1="arm" link2="base_link" reason="Never" />
