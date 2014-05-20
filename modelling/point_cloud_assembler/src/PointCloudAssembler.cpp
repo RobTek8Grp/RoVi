@@ -201,6 +201,30 @@ void PointCloudAssembler::processFrame(pcl::PointCloud<PointT>& points, geometry
 	this->pcStitching.stitch(	filteredPoints,
 								this->systemParameters.stitching.epsilon,
 								this->systemParameters.stitching.maxCorrespondenceDistance);
+	
+	// 	Stitch two latest PC's
+	Eigen::Matrix4f tf = this->calibration.stitch(	filteredPoints, this->systemParameters.stitching.epsilon, this->systemParameters.stitching.maxCorrespondenceDistance);
+	this->calibration.setStitching(	filteredPoints );
+
+	//	Horrible conversion - sorry Kent...
+	tf::Matrix3x3 tf3d;
+  	tf3d.setValue(	static_cast<double>(tf(0,0)), static_cast<double>(tf(0,1)), static_cast<double>(tf(0,2)), 
+        		static_cast<double>(tf(1,0)), static_cast<double>(tf(1,1)), static_cast<double>(tf(1,2)), 
+        		static_cast<double>(tf(2,0)), static_cast<double>(tf(2,1)), static_cast<double>(tf(2,2)));
+	
+	tf::Quaternion tfqt;
+	tf3d.getRotation(tfqt);
+
+	//	Publish error transform
+	this->calibrationMsg.data.header.frame_id = this->groupMsg.data.pose_id.back()
+	this->calibrationMsg.data.position.x = tf(0,3);
+	this->calibrationMsg.data.position.y = tf(1,3);
+	this->calibrationMsg.data.position.z = tf(2,3);
+
+	this->calibrationMsg.data.orientation.x = tfqt.x();
+	this->calibrationMsg.data.orientation.y = tfqt.y();
+	this->calibrationMsg.data.orientation.z = tfqt.z();
+	this->calibrationMsg.data.orientation.w = tfqt.w();
 
 	//	Voxel filter after stitching
 	pcl::PointCloud<PointT> voxelFiltered, stitched(*this->pcStitching.getStitching());
@@ -222,6 +246,9 @@ void PointCloudAssembler::publishMsg(void)
 	this->outputMsg.data.header.stamp = ros::Time::now();
 	this->outputMsg.data.header.frame_id = "base_link";
 	this->outputMsg.pub.publish(this->outputMsg.data);
+
+	this->calibrationMsg.data.header.stamp = ros::Time::now();
+	this->calibrationMsg.pub.publish(this->calibrationMsg.data);
 
 	if (this->publishAuxPoints)
 	{

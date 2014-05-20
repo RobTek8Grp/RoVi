@@ -98,6 +98,13 @@ private:
 		bool isPointCloudAssembled;
 	} outputMsg;
 
+	struct
+	{
+		ros::Publisher pub;
+		std::string topic;
+		sensor_msgs::PoseStamped data;
+	} calibrationMsg;
+
 	//	Callback
 	void msgCallback(const group4_msgs::PointCloudPose data);
 
