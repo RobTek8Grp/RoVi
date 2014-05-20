@@ -33,7 +33,7 @@ private:
 	ros::NodeHandle nodeHandle;
 
 	int spinRate;
-	bool publishAuxPoints, broadcastTf;
+	bool publishAuxPoints, broadcastTf, useCarmine;
 	ros::Publisher auxPub;
 	sensor_msgs::PointCloud2 auxPoints;
 

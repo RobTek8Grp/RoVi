@@ -23,7 +23,10 @@ PointCloudAssembler::PointCloudAssembler() : nodeHandle("~")
 
 	//	Debug (aux. info)
 	this->nodeHandle.param<bool>("debug", this->publishAuxPoints, true);
+
 	this->nodeHandle.param<bool>("broadcast_transform", this->broadcastTf, false);
+	this->nodeHandle.param<bool>("use_carmine", this->useCarmine, false);
+
 	this->auxPub = this->nodeHandle.advertise<sensor_msgs::PointCloud2>("debug/auxPoints", 10);
 
 	//	Parameters (group4 msg)
@@ -57,9 +60,11 @@ PointCloudAssembler::PointCloudAssembler() : nodeHandle("~")
 
 	//	Offset transform
 	tf::Quaternion q;
+//	q.setRPY(0.0, 0.0, 0.0);
+//	this->tfOffset.setOrigin(tf::Vector3(0.0, 0.0, 0.0));
 	q.setRPY(-M_PI / 2.0, 0.0, -M_PI / 2.0);
-//	this->tfOffset.setOrigin(tf::Vector3(-0.046, 0.052, 0.056));	//	Gotten from TF
-	this->tfOffset.setOrigin(tf::Vector3(0.0, 0.052, 0.056));		//	Kent's calibration
+//	this->tfOffset.setOrigin(tf::Vector3(-0.046, 0.052, 0.056));	//	Gotten from TF (Carmine)
+	this->tfOffset.setOrigin(tf::Vector3(0.0, 0.052, 0.056));		//	Kent's calibration (carmine)
 	this->tfOffset.setRotation(q);
 
 	//	Point Cloud Filters (Cut-Off)
@@ -131,15 +136,25 @@ void PointCloudAssembler::update(void)
 		if ((f.pose_id.data - 1) == this->groupMsg.lastPoseId)
 		{
 			//	Process frame
+			ROS_INFO(" point_cloud_assembler: Processing frame %d/%d ... ", f.pose_id.data, f.pose_id_max.data);
+
 			if (f.pose_id.data == 1)
 				this->pcStitching.reset();
 
 			//	Convert ros type to pcl type
-			pcl::PointCloud<PointT> p;
-			pcl::fromROSMsg(f.carmine_pointcloud, p);	//	TODO: Is chaniging to point cloud given by Frederik
+			if (this->useCarmine)
+			{
+				pcl::PointCloud<PointT> p;
+				pcl::fromROSMsg(f.carmine_pointcloud, p);
+				this->processFrame(p, f.carmine_pose);		//	Process points
+			}
+			else
+			{
+				pcl::PointCloud<PointT> p;
+				pcl::fromROSMsg(f.bumblebee_pointcloud, p);
+				this->processFrame(p, f.bumblebee_pose_left);		//	Process points
+			}
 
-			ROS_INFO(" point_cloud_assembler: Processing frame %d/%d ... ", f.pose_id.data, f.pose_id_max.data);
-			this->processFrame(p, f.carmine_pose);		//	Process points
 
 			if (f.pose_id.data == f.pose_id_max.data)
 			{
