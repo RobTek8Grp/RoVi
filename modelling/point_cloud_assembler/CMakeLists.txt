@@ -1,10 +1,6 @@
 cmake_minimum_required(VERSION 2.8.3)
 project(point_cloud_assembler)
 
-#################################
-#	 Catkin specific	#
-#################################
-catkin_package()
 
 #########################
 #	Packages	#
@@ -20,6 +16,12 @@ find_package(catkin REQUIRED COMPONENTS
 	tf_conversions
 )
 
+#################################
+#	 Catkin specific	#
+#################################
+catkin_package()
+
+
 #	PCL
 find_package(PCL REQUIRED)
 
@@ -34,6 +36,6 @@ add_definitions(-std=c++0x ${PCL_DEFINITIONS})
 #     Build 	#
 #################
 
-add_executable		(point_cloud_assembler_node src/PointCloudAssembler.cpp src/PointCloudStitching.cpp src/calibration.cpp)
-add_dependencies	(point_cloud_assembler_node point_cloud_assembler_generate_messages_cpp)
-target_link_libraries	(point_cloud_assembler_node ${catkin_LIBRARIES} ${PCL_LIBRARIES})
+add_executable(point_cloud_assembler_node src/PointCloudAssembler.cpp src/PointCloudStitching.cpp src/calibration.cpp)
+add_dependencies(point_cloud_assembler_node point_cloud_assembler_generate_messages_cpp)
+target_link_libraries(point_cloud_assembler_node ${catkin_LIBRARIES} ${PCL_LIBRARIES})
