@@ -443,4 +443,97 @@
     <child link="collision_object" />
     <axis xyz="1 0 0" />
   </joint>
+  
+  
+  <link name="collision_radiator">
+    <collision>
+      <geometry>
+        <box size="0.3 2 0.52" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="collision_radiator_joint"
+    type="fixed">
+    <origin
+      xyz="-0.65 0.0 0.0"
+      rpy="0 0 0" />
+    <parent link="base_link" />
+    <child link="collision_radiator" />
+    <axis xyz="1 0 0" />
+  </joint>
+  
+  <link name="collision_table">
+    <collision>
+      <geometry>
+        <box size="1.5 1.5 0.1" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="collision_table_joint"
+    type="fixed">
+    <origin
+      xyz="0.0 0.0 -0.025"
+      rpy="0 0 0" />
+    <parent link="base_link" />
+    <child link="collision_table" />
+    <axis xyz="1 0 0" />
+  </joint>
+
+    
+  <link name="collision_fence">
+    <collision>
+      <geometry>
+        <box size="2 0.1 2" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="collision_fence_joint"
+    type="fixed">
+    <origin
+      xyz="0.0 -0.79 0"
+      rpy="0 0 0" />
+    <parent link="base_link" />
+    <child link="collision_fence" />
+    <axis xyz="1 0 0" />
+  </joint>
+  
+  <link name="collision_pole">
+    <collision>
+      <geometry>
+        <box size="0.3 0.3 2" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="collision_pole_joint"
+    type="fixed">
+    <origin
+      xyz="-0.65 -0.7 0"
+      rpy="0 0 0" />
+    <parent link="base_link" />
+    <child link="collision_pole" />
+    <axis xyz="1 0 0" />
+  </joint>
+  
+  <link name="collision_wall">
+    <collision>
+      <geometry>
+        <box size="0.01 2 2" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="collision_wall_joint"
+    type="fixed">
+    <origin
+      xyz="-0.65 0 0"
+      rpy="0 0 0" />
+    <parent link="base_link" />
+    <child link="collision_wall" />
+    <axis xyz="1 0 0" />
+  </joint>
+  
 </robot>
