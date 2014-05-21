@@ -32,7 +32,7 @@ class GPStest():
     def spin(self):
         while self.running:
 	    if self.data_received:
-		if self.point_cloud_pose_messages[-1].data == self.pose_id_max:
+		if len(pose_stamped_messages) == self.pose_id_max:
 		  self.calculateTransform()
 		  self.running = False
 
