@@ -112,7 +112,7 @@ private:
 };
 int main( int argc, char** argv )
 {
-
+    const int startup_delay = 5;
     ros::init(argc, argv, "rx60_hardware");
     ros::NodeHandle nh_("robot_rx60b");
     RX60Robot robot;
@@ -129,6 +129,7 @@ int main( int argc, char** argv )
     ros::Rate r(10);
     int alive_count = 0;
 
+    ros::Time startup_time = ros::Time::now();
 
     while (ros::ok())
     {
@@ -139,9 +140,13 @@ int main( int argc, char** argv )
 
         cm.update(ros::Time::now(), period);
 
-        const sensor_msgs::JointState::Ptr robotCmd = robot.write();
-        wrapper.setJointState(robotCmd);
-
+        // Wait for valid jointstates
+        const ros::Duration time_since_start = ros::Time::now() - startup_time;
+        if (time_since_start.toSec() > startup_delay)
+        {
+            const sensor_msgs::JointState::Ptr robotCmd = robot.write();
+            wrapper.setJointState(robotCmd);
+        }
         last = ros::Time::now();
 
         state_publisher.publish(robotState);
