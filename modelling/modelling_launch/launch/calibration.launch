@@ -1,0 +1,33 @@
+<launch>
+	<node name="point_cloud_assembler" pkg="point_cloud_assembler" type="point_cloud_assembler_node" output="screen">
+		<!-- Debug -->
+		<param name="debug" value="true" />
+		<param name="use_carmine" value="true" />
+		<param name="broadcast_transform" value="true" />
+		
+		<!-- Input/Output topics -->
+		<param name="input_topic" value="/robot_rx60b/carmine_pose" />
+		<!-- param name="input_topic" value="/robot_rx60b/bumblebee_pose" / -->
+		<param name="output_topic" value="assembled_point_cloud" />
+		
+		<param name="calibrationMsg" value="calibration" />
+		
+		<!-- Cut-Off filter parameters -->
+		<param name="cutoff/x_min" value="-0.1" />		<!--	[m]		-->
+		<param name="cutoff/x_max" value="0.1" />		<!--	[m]		-->
+		<param name="cutoff/y_min" value="-0.1" />		<!--	[m]		-->
+		<param name="cutoff/y_max" value="0.1" />		<!--	[m]		-->
+		<param name="cutoff/z_min" value="0.5" />		<!--	[m]		-->
+		<param name="cutoff/z_max" value="1.0" />		<!--	[m]		-->
+		
+		<!-- Voxel filter -->
+		<param name="voxel/x" value="0.005" />		<!--	[m]		-->
+		<param name="voxel/y" value="0.005" />		<!--	[m]		-->
+		<param name="voxel/z" value="0.005" />		<!--	[m]		-->
+		
+		<!-- Stitching -->
+		<param name="stitching/epsilon" value="1e-7" />							<!--	[m]		-->
+		<param name="stitching/max_correspondance_distance" value="0.05" />		<!--	[m]		-->
+	</node>
+	
+</launch>
