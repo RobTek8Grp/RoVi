@@ -74,7 +74,7 @@ NumberedPoses generatePoses(tf::Pose& object_center,const int circle_points, con
     double angle_step = 2* M_PI / circle_points;
     double pitch_angle_base = pitch_step * -1;
 
-    for (int altitude_pos = 0; altitude_pos < 3; altitude_pos++)
+    for (int altitude_pos = 1; altitude_pos < 3; altitude_pos++)
     {
         double angle_pitch = pitch_angle_base + (pitch_step * (double)altitude_pos);
         //angle_step *= -1;
@@ -160,9 +160,9 @@ enum altitude_t {HIGH, MID, LOW, Count};
 
 int main(int argc, char **argv)
 {
-    const double radius = 0.45; // 0.5
+    const double radius = 0.54; // 0.5
     const double pitch_step = 0.2;
-    const int circle_points = 8;
+    const int circle_points = 6;
     const double plan_time = 30;
     //const int pose_id_max = circle_points * 3;
     const ros::Duration wait_settle(1.0);
@@ -260,7 +260,7 @@ int main(int argc, char **argv)
 
 
         success = false;
-        for (int itry = 0; itry < 5; itry++)
+        for (int itry = 0; itry < 2; itry++)
         {
 
             group.setStartStateToCurrentState();
