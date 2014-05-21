@@ -138,7 +138,12 @@ int main( int argc, char** argv )
         const sensor_msgs::JointState::Ptr robotState = wrapper.getJointState();
         robot.read(robotState);
 
-        cm.update(ros::Time::now(), period);
+
+        // Wait for valid jointstates
+        const ros::Duration time_since_start = ros::Time::now() - startup_time;
+        if (time_since_start.toSec() > startup_delay)
+        {
+            cm.update(ros::Time::now(), period);
 
         // Wait for valid jointstates
         const ros::Duration time_since_start = ros::Time::now() - startup_time;
@@ -147,6 +152,8 @@ int main( int argc, char** argv )
             const sensor_msgs::JointState::Ptr robotCmd = robot.write();
             wrapper.setJointState(robotCmd);
         }
+        else
+            ROS_INFO("Waiting %i seconds before controlling the robot (%f elapsed)", startup_delay, time_since_start.toSec());
         last = ros::Time::now();
 
         state_publisher.publish(robotState);
