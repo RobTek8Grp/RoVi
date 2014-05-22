@@ -425,7 +425,7 @@
     <axis xyz="1 0 0" />
   </joint>
   
-  
+<!--  
   <link name="collision_object">
     <collision>
       <geometry>
@@ -443,7 +443,7 @@
     <child link="collision_object" />
     <axis xyz="1 0 0" />
   </joint>
-  
+-->
   
   <link name="collision_radiator">
     <collision>

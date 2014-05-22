@@ -66,52 +66,59 @@ public:
 };
 typedef std::vector<NumberedPose> NumberedPoses;
 
-NumberedPoses generatePoses(tf::Pose& object_center,const int circle_points, const double pitch_step, const double radius)
+NumberedPose generatePose(tf::Pose& object_center, const int pose_id, const int pose_id_max, const double radius, const double angle_pitch, const double angle_yaw)
+{
+    NumberedPose pose;
+
+    tf::Transform pose_rotation;
+    tf::Quaternion pose_rotation_quaternion;
+    pose_rotation_quaternion.setRPY(0,angle_pitch,angle_yaw);
+    pose_rotation.setRotation(pose_rotation_quaternion);
+
+    tf::Transform pose_translation;
+    pose_translation.setOrigin(tf::Vector3(radius,0,0));
+    pose_rotation_quaternion.setRPY(0,0,M_PI);
+    pose_translation.setRotation(pose_rotation_quaternion);
+
+    tf::Pose goal_pose = object_center * pose_rotation * pose_translation;
+    pose.markerpose = tfTransformToGeometryPose(goal_pose);
+
+    tf::Transform pose_orient;
+    pose_orient.setOrigin(tf::Vector3(0,0,0));
+    pose_rotation_quaternion.setRPY(-M_PI/2,0,-M_PI/2);
+    pose_orient.setRotation(pose_rotation_quaternion);
+
+    pose.pose_tf = goal_pose*pose_orient;
+    pose.pose = tfTransformToGeometryPose(pose.pose_tf);
+    //pose.pose = pose.markerpose;
+
+    pose.pose_id = pose_id;
+    pose.pose_id_max = pose_id_max;
+
+    return pose;
+}
+
+NumberedPoses generatePoses(tf::Pose& object_center,const int circle_points, const int circle_rings, const double pitch_step, const double radius)
 {
     std::vector<NumberedPose> poses;
-    const int pose_id_max = circle_points * 3;
+    const int pose_id_max = circle_points * circle_rings;
     int pose_id = 0;
     double angle_step = 2* M_PI / circle_points;
-    double pitch_angle_base = pitch_step * -1;
+    double pitch_angle_lower = pitch_step * -1 * floor(circle_rings/2);
 
-    for (int altitude_pos = 1; altitude_pos < 3; altitude_pos++)
+    for (double yaw_pos = 0; yaw_pos < circle_points; yaw_pos++)
     {
-        double angle_pitch = pitch_angle_base + (pitch_step * (double)altitude_pos);
-        //angle_step *= -1;
-
-        for (double yaw_pos = 0; yaw_pos < circle_points; yaw_pos++)
+        for (int altitude_pos = 0; altitude_pos < circle_rings; altitude_pos++)
         {
             pose_id++;
-            double angle_yaw = M_PI + angle_step * yaw_pos;
-            //geometry_msgs::Pose target_pose1;
-            NumberedPose pose;
 
-            tf::Transform pose_rotation;
-            tf::Quaternion pose_rotation_quaternion;
-            pose_rotation_quaternion.setRPY(0,angle_pitch,angle_yaw);
-            pose_rotation.setRotation(pose_rotation_quaternion);
+            // Pitch angle
+            double angle_pitch = pitch_angle_lower + (pitch_step * (double)altitude_pos);
 
-            tf::Transform pose_translation;
-            pose_translation.setOrigin(tf::Vector3(radius,0,0));
-            pose_rotation_quaternion.setRPY(0,0,M_PI);
-            pose_translation.setRotation(pose_rotation_quaternion);
+            double angle_yaw_offset = (angle_step / circle_rings)*altitude_pos;
+            double angle_yaw = M_PI + angle_step * yaw_pos + angle_yaw_offset;
 
-            tf::Pose goal_pose = object_center * pose_rotation * pose_translation;
-            pose.markerpose = tfTransformToGeometryPose(goal_pose);
-
-            tf::Transform pose_orient;
-            pose_orient.setOrigin(tf::Vector3(0,0,0));
-            pose_rotation_quaternion.setRPY(0,0,0);
-            pose_rotation_quaternion.setRPY(-M_PI/2,0,-M_PI/2);
-            pose_orient.setRotation(pose_rotation_quaternion);
-
-            pose.pose_tf = goal_pose*pose_orient;
-            pose.pose = tfTransformToGeometryPose(pose.pose_tf);
-            //pose.pose = pose.markerpose;
-
-            pose.pose_id = pose_id;
-            pose.pose_id_max = pose_id_max;
-
+            NumberedPose pose = generatePose(object_center, pose_id, pose_id_max, radius, angle_pitch, angle_yaw);
             poses.push_back(pose);
         }
     }
@@ -119,7 +126,7 @@ NumberedPoses generatePoses(tf::Pose& object_center,const int circle_points, con
     return poses;
 }
 
-void visualizePoses(NumberedPoses& poses, const std::string frame_id,ros::Publisher& markerPublisher)
+void visualizePoses(NumberedPoses& poses, const std::string frame_id,ros::Publisher& markerPublisher, const int highlight_id = 0)
 {
     if (poses.size() < 1)
             return;
@@ -148,6 +155,19 @@ void visualizePoses(NumberedPoses& poses, const std::string frame_id,ros::Publis
 
     BOOST_FOREACH(NumberedPose pose, poses)
     {
+        if (pose.pose_id == highlight_id)
+        {
+            marker.scale.x = 0.05;
+            marker.color.r = 0.0;
+            marker.color.a = 0.9;
+        }
+        else
+        {
+            marker.scale.x = 0.03;
+            marker.color.r = 1.0;
+            marker.color.a = 0.5;
+        }
+
         marker.pose = pose.markerpose;
         marker.id = pose.pose_id;
         markers.markers.push_back(marker);
@@ -160,23 +180,17 @@ enum altitude_t {HIGH, MID, LOW, Count};
 
 int main(int argc, char **argv)
 {
-    const double radius = 0.54; // 0.5
+    const double radius = 0.5; // 0.5
     const double pitch_step = 0.2;
-    const int circle_points = 6;
-    const double plan_time = 30;
+    const int circle_points = 6; // 6
+    const int circle_rings = 3; // 3
+    const double plan_time = 5;
+    const int plan_retry = 1;
     //const int pose_id_max = circle_points * 3;
     const ros::Duration wait_settle(1.0);
     const ros::Duration wait_camera(0.5);
     const ros::Duration wait_notreached(3.0);
     const ros::Duration wait_reset(30.0);
-
-    // Unable to construct goal representation
-    //const std::string planning_group = "bumblebee"; //robot, bumblebee
-    //const std::string end_effector = "bumblebee_cam1"; // bumblebee_cam1, tool_flange
-
-    // Working with group.setGoalTolerance(0.1f); and pose.pose = pose.markerpose;
-    //const std::string planning_group = "bumblebee"; //robot, bumblebee
-    //const std::string end_effector = "tool_flange"; // bumblebee_cam1, tool_flange
 
     const std::string planning_group = "bumblebee"; //robot, bumblebee
     const std::string end_effector = "tool_flange"; // bumblebee_cam1, tool_flange
@@ -209,7 +223,7 @@ int main(int argc, char **argv)
     msg.header.frame_id = frame_id;
 
     tf::Pose object_center = marker.getPose("object_center");
-    NumberedPoses poses = generatePoses(object_center, circle_points, pitch_step, radius);
+    NumberedPoses poses = generatePoses(object_center, circle_points, circle_rings, pitch_step, radius);
     NumberedPoses::iterator poses_itt;
     bool poses_updated = true;
 
@@ -218,17 +232,16 @@ int main(int argc, char **argv)
     {
         bool success;
 
-        if (poses_updated)
+        if (poses_updated || poses_itt == poses.end())
         {
             poses_itt = poses.begin();
             poses_updated = false;
         }
 
-        object_center = marker.getPose("object_center");
-        //poses = generatePoses(object_center, circle_points, pitch_step, radius);
-        visualizePoses(poses, frame_id,markerPublisher);
-
         NumberedPose numbered_pose = *poses_itt;
+
+        visualizePoses(poses, frame_id,markerPublisher, numbered_pose.pose_id);
+
 
         ROS_INFO("Moving to pose %i of %i", numbered_pose.pose_id, numbered_pose.pose_id_max);
 
@@ -244,23 +257,11 @@ int main(int argc, char **argv)
         }
 
         tf::Pose p = numbered_pose.pose_tf * transform;
-
-        geometry_msgs::Pose desired_pose;
-        desired_pose = tfPoseToGeometryPose(p);
-        std::cout << numbered_pose.pose;
+        geometry_msgs::Pose desired_pose = tfPoseToGeometryPose(p);
         group.setPoseTarget(desired_pose, end_effector);
-        //group.setPositionTarget(desired_pose.position.x,desired_pose.position.y,desired_pose.position.z,end_effector);
-        //group.setOrientationTarget(numbered_pose.pose.orientation.x, numbered_pose.pose.orientation.y,numbered_pose.pose.orientation.z,numbered_pose.pose.orientation.w, end_effector);
-        //group.setPositionTarget(0,0,0,end_effector);
-        //group.setPoseReferenceFrame("object_center");
-
-
-        //ROS_INFO("Planning frame %s",group.getPlanningFrame().c_str());
-        //ROS_INFO("Planning pose ref frame %s", group.getPoseReferenceFrame().c_str());
-
 
         success = false;
-        for (int itry = 0; itry < 2; itry++)
+        for (int itry = 0; itry < plan_retry; itry++)
         {
 
             group.setStartStateToCurrentState();
