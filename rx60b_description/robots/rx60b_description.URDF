@@ -382,6 +382,7 @@
   <link name="asus_depthcam"></link>
   <link name="asus_rgbcam"></link>
   <link name="asus_projector"></link>
+  <link name="camera_link_base"></link>
   <link name="camera_link"></link>
   
   <joint
@@ -421,10 +422,21 @@
       xyz="0.0 0.052 0.056"
       rpy="0 0 1.57079632679" />
     <parent link="cameratool" />
-    <child link="camera_link" />
+    <child link="camera_link_base" />
     <axis xyz="1 0 0" />
   </joint>
   
+  <joint
+    name="camera_link_calibration_joint"
+    type="fixed">
+    <origin
+      xyz="-0.000720925758209 -0.0152323263351 0.0157927251061"
+      rpy="-0.0168287298647 0.000769727110753 -0.096552431091" />
+    <parent link="camera_link_base" />
+    <child link="camera_link" />
+    <axis xyz="1 0 0" />
+  </joint>
+
 <!--  
   <link name="collision_object">
     <collision>
